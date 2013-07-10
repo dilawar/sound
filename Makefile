@@ -7,13 +7,13 @@
 # Modification logs : 
 CC = g++
 CFLAGS = -c -g -Wall   -I /usr/local/include 
-MACRO =  -D DEBUG -D SCILAB1 -D SOX
+CFLAGS += $(shell pkg-config --cflags alsa)
+MACRO =  -D DEBUG #-D SCILAB1 -D SOX
 VPATH = src:../include
 OBJECTS = main.o wav-file.o alsa.o gtk_proj.o
 INCFLAGS = -I include 
 LDFLAGS = -Wl,-rpath-link,/usr/local/lib  #-L/usr/lib/scilab
-LDFLAGS += $(shell pkg-config --libs gtk+-2.0)
-LIBS = -lasound # -lscilab
+LIBS = $(shell pkg-config --libs alsa)
 
 all: parseSpeech
 
