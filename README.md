@@ -8,3 +8,8 @@ class to read WAV file and store its content in an array. We also store these
 values in a ASCII file and plot it using gnuplot to check whether we get it
 right. praat can be used to confirm whether our output is right or not. We only
 support non-compressed WAV file.
+
+Dependencies 
+============
+
+Install 'libasound2-dev' package.

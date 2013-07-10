@@ -1,0 +1,7 @@
+ABOUT
+=====
+
+	Audio processing of Hindi speech. We input a file containing spoken words of
+Hindi in wav foramt and process the stream and figure out the what 'akshars'
+are contained in this sentence.
+
