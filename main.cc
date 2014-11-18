@@ -146,8 +146,12 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    Aiff* pAiff;
-    pAiff->openFile(fileName);
+    /*  read a wave file and generate data. */
+    WavFile* pWaveFile = new WavFile;
+    pWaveFile->openWavFile(fileName);
+
+    delete pWaveFile;
+
 }
 
 

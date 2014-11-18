@@ -127,6 +127,19 @@ aiff/fast:
 	$(MAKE) -f aiff/CMakeFiles/aiff.dir/build.make aiff/CMakeFiles/aiff.dir/build
 .PHONY : aiff/fast
 
+#=============================================================================
+# Target rules for targets named wave
+
+# Build rule for target.
+wave: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 wave
+.PHONY : wave
+
+# fast build rule for target.
+wave/fast:
+	$(MAKE) -f wave/CMakeFiles/wave.dir/build.make wave/CMakeFiles/wave.dir/build
+.PHONY : wave/fast
+
 main.o: main.cc.o
 .PHONY : main.o
 
@@ -161,6 +174,7 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... songbird"
 	@echo "... aiff"
+	@echo "... wave"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
