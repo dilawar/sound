@@ -1,6 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(songbird)
 
+add_definitions(-std=c++11)
 
 INCLUDE_DIRECTORIES(
     aiff

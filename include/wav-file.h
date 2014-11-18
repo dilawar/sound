@@ -22,11 +22,13 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <vector>
 
 #ifndef  CONST84
 #define CONST84       /* -----  not CONST84  ----- */
 #endif     /* -----  not CONST84  ----- */
 
+using namespace std;
 
 /*
  * =====================================================================================
@@ -136,14 +138,11 @@ class WavFile
 
 
     public:
-        
-        /* 
-         * ===  FUNCTION  ======================================================================
-         *         Name:  openWavFile
-         *  Description:  This will open the wav file for further processing.
-         * =====================================================================================
+       
+        /**
+         * Read wave file and return a vector 
          */
-        int openWavFile(char* fileName);
+        void readWavFile(const string fileName, std::vector<double>& outVec, bool save);
 
         /* 
          * ===  FUNCTION ======================================================================

@@ -2,27 +2,31 @@
 /*
  * project_hindi
  * Copyright (C) Dilawar Singh 2010 <dilawar@ee.iitb.ac.in>
- * 
+ *
  * project_hindi is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * project_hindi is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "./../include/wav-file.h"
-#include	"./../include/wav-def.h"
+#include "./../include/wav-def.h"
 #include  <string.h>
-#include	<stdio.h>
-#include	<stdlib.h>
-#include	<math.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <exception>
+#include <stdexcept>
+#include <sstream>
+#include <fstream>
 
 /* constructor */
 WavFile::WavFile()
@@ -31,7 +35,7 @@ WavFile::WavFile()
 #ifdef  DEBUG
     printf("\ninside WavFile()");
 #endif     /* -----  not DEBUG  ----- */
-}		/* -----  end of method WavFile::WavFile  ----- */
+}  /* -----  end of method WavFile::WavFile  ----- */
 
 /* deconstructor */
 WavFile::~WavFile()
@@ -49,7 +53,7 @@ WavFile::~WavFile()
  *--------------------------------------------------------------------------------------
  *       Class:  WavFile
  *      Method:  getNumSamples
- * Description:  returns num of sample in file.  
+ * Description:  returns num of sample in file.
  *--------------------------------------------------------------------------------------
  */
 long int WavFile::getNumSamples()
@@ -125,16 +129,18 @@ int WavFile::ifMoreDataAvailable()
  */
 double WavFile::readCurrentInput()
 {
-    if( (gWavDataIn == NULL) || (maxInSamples <=0) || (numInSamples < 0) ) 
+    stringstream ss;
+    if( (gWavDataIn == NULL) || (maxInSamples <=0) || (numInSamples < 0) )
     {
-        printf("\nInput file not ready (or not loaded) !!!\n");
-        exit(1);
+        ss << "\nInput file not ready (or not loaded) !!!" << endl;
+        throw runtime_error(ss.str());
     }
 
     if( numInSamples >= maxInSamples)
     {
-        printf("What you reading. Nothing is left to read, you crazy book-worm!!");
-        exit(1);
+        ss.str("");
+        ss << "What you reading. Nothing is left to read, you crazy book-worm!!";
+        throw runtime_error(ss.str());
     }
     return gWavDataIn[numInSamples++];
 }
@@ -146,14 +152,11 @@ double WavFile::readCurrentInput()
  * Description:  this is another constructor which reads the file.
  *--------------------------------------------------------------------------------------
  */
-int WavFile::openWavFile(char* fileName)
-{
 
-#ifdef  DEBUG
-    printf("\nopenWavFile function");
-#endif     /* -----  not DEBUG  ----- */
+void WavFile::readWavFile(const string fileName, vector<double>& outVector, bool save)
+{
+    stringstream ss;
     int i;
-    //printf("Inside function.");
     FILE *pFile;
     unsigned int stat;
     char outBuffer[80];
@@ -177,40 +180,39 @@ int WavFile::openWavFile(char* fileName)
     /* allocate wav header */
     pWavHeader = new WAV_HDR;
     pChunkHeader = new CHUNK_HDR;
-    
+
     if( NULL == pWavHeader )
     {
-        printf("can't new headers\n");
-        exit(-1);
+        ss << "can't new headers" << endl;
+        throw runtime_error(ss.str());
     }
 
     if( NULL == pChunkHeader )
     {
-        printf("can't new headers\n");
-        exit(-1);
+        ss.str("");
+        ss << "can't new headers\n";
+        throw runtime_error(ss.str());
     }
 
-    /* 
-     * open the wav file 
+    /*
+     * open the wav file
      */
-    pFile = fopen( fileName, "rb");
+    pFile = fopen( fileName.c_str(), "rb");
     if(pFile == NULL)
-    {
-        printf("Can't open wav file.");
-        exit(-1);
-    }
+        throw runtime_error("Can't open file " + fileName);
 
 
     /*-----------------------------------------------------------------------------
      *  Now, we have load the file. Start reading data.
      *-----------------------------------------------------------------------------*/
 
-    /* read riff/wav header */ 
+    /* read riff/wav header */
     stat = fread((void*) pWavHeader, sizeof(WAV_HDR), (size_t)1, pFile);
     if(stat != 1)
     {
-        printf("Header missing. May be format is not OK!\n"); // This is tested.
-        exit(-1);
+        ss.str("");
+        ss << "Header missing. May be format is not OK!\n";
+        throw runtime_error(ss.str());
     }
 
     /* check format of header */
@@ -221,9 +223,10 @@ int WavFile::openWavFile(char* fileName)
     outBuffer[4] = 0;
     if(strcmp(outBuffer, "RIFF") != 0) // tested.
     {
-        printf("\nBad RIFF format. I am not cool enough to support everything");
-        printf("\nyou provide us with! Give me a good file.");
-        exit(-1);
+        ss.str("");
+        ss << "\nBad RIFF format. I am not cool enough to support everything";
+        ss << ("\nyou provide us with! Give me a good file.");
+        throw runtime_error(ss.str());
     }
 
     for(i = 0; i < 4; i++)
@@ -240,8 +243,8 @@ int WavFile::openWavFile(char* fileName)
 
     if(strcmp(outBuffer, "WAVE") != 0) // tested.
     {
-        printf("\nBad WAVE format");
-        exit(-1);
+        ss.str(""); ss << ("\nBad WAVE format");
+        throw runtime_error(ss.str());
     }
 
     for(i = 0; i < 4; i++)
@@ -257,45 +260,51 @@ int WavFile::openWavFile(char* fileName)
 
     if(strcmp(outBuffer, "fmt ") != 0) // not with "fmt" since 4th pos is blank
     {
-        printf("\nBad fmt format");
-        exit(-1);
+        ss.str("");
+        ss << ("\nBad fmt format");
+        throw runtime_error(ss.str());
     }
 
     if(pWavHeader->wFormatTag != 1)
     {
-        printf("\n Bad wav wFormatTag");
-        exit(-1);
+        ss.str("");
+        ss <<("\n Bad wav wFormatTag");
+        throw runtime_error(ss.str());
     }
 
     if( (pWavHeader->numBitsPerSample != 16) && (pWavHeader->numBitsPerSample != 8))
     {
-        printf("\nBad wav bits per sample");
+        ss.str(""); ss << ("\nBad wav bits per sample");
+        throw runtime_error(ss.str());
     }
 
-    /* 
+    /*
      * Skip over any remaining portion of wav header.
      */
     rMore = pWavHeader->pcmHeaderLength - (sizeof(WAV_HDR) - 20);
     if( 0 != fseek(pFile, rMore, SEEK_CUR))
-    {
-        printf("Can't seek.");
-    }
+        cerr << "Warn: Can't seek." << endl;
 
-    /* 
+    /*
      * read chunk untill a data chunk is found.
      */
     sFlag = 1;
     while(sFlag != 0)
     {
         // check attempts.
-        if(sFlag > 10) { printf("\nToo manu chunks"); exit(-1);}
+        if(sFlag > 10)
+        {
+            ss.str(""); ss << ("\nToo manu chunks");
+            throw runtime_error(ss.str());
+        }
 
         // read chunk header
         stat = fread((void*)pChunkHeader, sizeof(CHUNK_HDR), (size_t)1, pFile);
         if( 1 != stat)
         {
-            printf("\n I just can't read data. Sorry!");
-            exit(-1);
+            ss.str("");
+            ss << ("\n I just can't read data. Sorry!");
+            throw runtime_error(ss.str());
         }
 
         // check chunk type.
@@ -304,15 +313,18 @@ int WavFile::openWavFile(char* fileName)
             outBuffer[i] = pChunkHeader->dId[i];
         }
         outBuffer[4] = 0;
-        if(strcmp(outBuffer, "data") == 0) { break;}
+        if(strcmp(outBuffer, "data") == 0)
+        {
+            break;
+        }
 
         // skip over chunk.
         sFlag++;
         stat = fseek(pFile, pChunkHeader->dLen, SEEK_CUR);
         if(stat != 0)
         {
-            printf("Can't seek.");
-            exit(-1);
+            ss.str(""); ss << ("Can't seek.");
+            throw runtime_error(ss.str());
         }
 
     }
@@ -332,13 +344,16 @@ int WavFile::openWavFile(char* fileName)
     wBuffer = new char[wBufferLength];
     if( wBuffer == NULL)
     {
-        printf("\nCan't allocate."); exit(-1);
+        ss.str("");
+        ss << ("\nCan't allocate.");
+        throw runtime_error(ss.str());
     }
 
     gWavDataIn = new double[maxInSamples];
     if(gWavDataIn == NULL)
     {
-        printf("Can't allocate\n"); exit(-1);
+        printf("Can't allocate\n");
+        exit(-1);
     }
 
     /* read signal data */
@@ -367,48 +382,59 @@ int WavFile::openWavFile(char* fileName)
         }
     }
 
-#ifdef  DEBUG11
+    /*  save it into vector */
     for( i = 0; i < maxInSamples; i++)
     {
-        printf("%d:%f\t",i, gWavDataIn[i]);
+//        printf("%d:%f\t",i, gWavDataIn[i]);
+        outVector.push_back(gWavDataIn[i]);
     }
-#endif     /* -----  not DEBUG  ----- */
 
-    /* 
+    /*
      * save all this.
      */
-   fs_hz = (double) (pWavHeader->nSamplesPerSec);
-   bitsPerSample = pWavHeader->numBitsPerSample;
-   nChannel = pWavHeader->numChannels;
+    fs_hz = (double) (pWavHeader->nSamplesPerSec);
+    double timeStep = 1.0 / pWavHeader->nSamplesPerSec;
+    bitsPerSample = pWavHeader->numBitsPerSample;
+    nChannel = pWavHeader->numChannels;
 
-  /* reset and delete */
-   numInSamples = 0;
+    /* If save is true then store the vector into a file. */
+    if(save)
+    {
+        string outFile = fileName+".dat";
+        ofstream outF;
+        outF.open(outFile);
+        cout << "Info: Writing raw data to " << outFile << endl;
+        for(unsigned int i = 0; i < outVector.size(); i++)
+            outF << timeStep * i << "," << outVector[i] << endl;
+        outF.close();
+    }
 
-   if(wBuffer != NULL) delete wBuffer;
-   if(pWavHeader != NULL) delete pWavHeader;
-   if(pChunkHeader != NULL) delete pChunkHeader;
-   fclose(pFile);
-    
-   return EXIT_SUCCESS;
+    /* reset and delete */
+    numInSamples = 0;
+
+    if(wBuffer != NULL) delete wBuffer;
+    if(pWavHeader != NULL) delete pWavHeader;
+    if(pChunkHeader != NULL) delete pChunkHeader;
+    fclose(pFile);
 }
 
 int WavFile::displayInformation(char* fName)
 {
 #if 1
-   /*
-    * print the data.
-    */
-   printf("\n-----------------------------------------------------");
-   printf("\nLoaded wav file : %s", fName);
-   printf("\nSample rate: %1.01f (Hz)", fs_hz);
-   printf("\nNumber of samples = %ld", maxInSamples);
-   printf("\nBits per sample = %d", bitsPerSample);
-   printf("\nNumber of channels = %d", nChannel);
-   printf("\n----------------------------------------------------\n");
+    /*
+     * print the data.
+     */
+    printf("\n-----------------------------------------------------");
+    printf("\nLoaded wav file : %s", fName);
+    printf("\nSample rate: %1.01f (Hz)", fs_hz);
+    printf("\nNumber of samples = %ld", maxInSamples);
+    printf("\nBits per sample = %d", bitsPerSample);
+    printf("\nNumber of channels = %d", nChannel);
+    printf("\n----------------------------------------------------\n");
 #endif
- 
-  return EXIT_SUCCESS;
-} 
+
+    return EXIT_SUCCESS;
+}
 
 int WavFile::writeDataToFile()
 {
@@ -423,12 +449,12 @@ int WavFile::writeDataToFile()
 
     for( int i = 0; i < maxInSamples; i++)
     {
-       char data[30];
-       int n;
-       n = sprintf(data,"\t%1.9f\t%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it. 
-       //pData = gWavDataIn[i];
-       fprintf(pFile, data);
-       //std::cout<<data;
+        char data[30];
+        int n;
+        n = sprintf(data,"\t%1.9f\t%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it.
+        //pData = gWavDataIn[i];
+        fprintf(pFile, data);
+        //std::cout<<data;
     }
     fclose(pFile);
     return EXIT_SUCCESS;
