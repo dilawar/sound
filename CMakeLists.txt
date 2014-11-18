@@ -3,10 +3,10 @@ PROJECT(songbird)
 
 
 INCLUDE_DIRECTORIES(
-    include
+    includes
 )
 
-ADD_SUBDIRECTORY(src)
+ADD_SUBDIRECTORY(aiff)
 
 ADD_EXECUTABLE(songbird main.cc)
 
