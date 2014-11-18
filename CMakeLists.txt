@@ -4,6 +4,7 @@ PROJECT(songbird)
 
 INCLUDE_DIRECTORIES(
     aiff
+    wave
 )
 
 ADD_SUBDIRECTORY(aiff)
@@ -13,6 +14,7 @@ ADD_EXECUTABLE(songbird main.cc)
 
 TARGET_LINK_LIBRARIES(songbird
     aiff
+    wave
     asound
 )
 
