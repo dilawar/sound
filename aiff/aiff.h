@@ -20,15 +20,19 @@
 #ifndef  AIFF_INC
 #define  AIFF_INC
 
+#include <iostream>
+
+using namespace std;
+
 class Aiff
 {
     public:
         Aiff();
-
         ~Aiff();
 
     public:
         void openFile(char* filename);
-}
+
+};
 
 #endif   /* ----- #ifndef AIFF_INC  ----- */

@@ -30,16 +30,6 @@ Aiff::Aiff ()
     
 }  /* -----  end of method Aiff::Aiff  (constructor)  ----- */
 
-/*
- *-------------------------------------------------------------------------------
- *       Class:  Aiff
- *      Method:  Aiff
- * Description:  copy constructor
- *-------------------------------------------------------------------------------
- */
-Aiff::Aiff ( const Aiff &other )
-{
-}  /* -----  end of method Aiff::Aiff  (copy constructor)  ----- */
 
 /*
  *-------------------------------------------------------------------------------
@@ -52,18 +42,9 @@ Aiff::~Aiff ()
 {
 }  /* -----  end of method Aiff::~Aiff  (destructor)  ----- */
 
-/*
- *-------------------------------------------------------------------------------
- *       Class:  Aiff
- *      Method:  operator =
- * Description:  assignment operator
- *-------------------------------------------------------------------------------
- */
-Aiff& Aiff::operator = ( const Aiff &other )
-{
-    if ( this != &other )
-    {
-    }
-    return *this;
-}  /* -----  end of method Aiff::operator =  (assignment operator)  ----- */
 
+void Aiff::openFile(char* filename)
+{
+    cerr << "Opening " << filename << endl;
+    return;
+}

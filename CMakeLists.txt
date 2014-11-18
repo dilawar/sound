@@ -3,7 +3,7 @@ PROJECT(songbird)
 
 
 INCLUDE_DIRECTORIES(
-    includes
+    aiff
 )
 
 ADD_SUBDIRECTORY(aiff)
