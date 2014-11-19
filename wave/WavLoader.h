@@ -31,10 +31,11 @@ using namespace std;
 class WavLoader
 {
     public:
-        WavLoader();
-        WavLoader(string filepath);
 
+        WavLoader();
         ~WavLoader();
+
+        WavLoader(string filepath);
 
     private:
         /* data */

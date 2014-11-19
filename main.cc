@@ -35,120 +35,48 @@
 #define TRUE            1
 #define FALSE           0
 
-#include "global.h"
-#include  <iostream>
-#include "include/wav-file.h"
+#include "WavLoader.h"
 #include "dsp/dsp.h"
-#include "aiff.h"
-#include <getopt.h>
+#include "global.h"
+#include <boost/program_options.hpp>
 
 using namespace std;
 
 int test_main(int argc, char** argv)
 {
-#if DEBUG
-    std::cout<<"Entering the main()\n";
-    std::cout<<"\nNo of args are: "<<argc;
-#endif
+    namespace po = boost::program_options;
 
-    /* Here, we parse our argument passed to this application from command line*/
-    if(argc < 2)
+    po::options_description desc("Allowed options");
+
+    desc.add_options()
+        ("help", "Produce help message")
+        ("file", po::value<string>(), "Input sound file (wav format)")
+        ;
+
+    po::variables_map vm;
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if(vm.count("help"))
     {
-        std::cout<<"\nOh Snap!"
-                 <<"\nWassup, Fellow Human.."
-                 <<"\nAt least, you need to specify wav file. Use --help to see your options.\n";
-        return EXIT_FAILURE;
+        cout << desc << endl;
+        return 1;
     }
 
-    int c;
-    unsigned long long int number;
-    int do_help = 0;
-    int do_verbose = 0;
-    bool ifInvalid = FALSE;	/* flag variables. */
-    char* fileName;
-    while(1)
+    if(vm.count("file"))
     {
-        int option_index = 0;
-        static struct option long_options[] =
-        {
-            {"file", 		required_argument, 		NULL, 		'f'},
-            {"help", 			no_argument, 		 			&do_help, 	1},
-            {"verbose", 	no_argument, 				 	&do_verbose, 1},
-            {0, 0, 0 , 0}
-        };
-
-        c = getopt_long(argc, argv, "f:hv", long_options, &option_index);
-        if (c == -1)
-            break;
-
-        switch(c)
-        {
-
-        case 'f':
-#if DEBUG
-            std::cout<<"\nFrom main() - Option --file with value '"
-                     <<optarg<<"'\n";
-#endif
-            fileName = optarg;
-            break;
-
-
-        case 0:
-#ifdef DEBUG
-            std::cout<<"\noption "<<long_options[option_index].name;
-            if (optarg)
-                std::cout<<"with arg "<<optarg;
-            //std::cout<<"Bad option. x-(\n";
-#endif
-            break;
-
-        case 'v':
-            do_verbose = 1;
-#ifdef  DEBUG
-            std::cout<<"\nFrom main() : Verbose output is set.\n";
-#else      /* -----  not DEBUG  ----- */
-
-#endif     /* -----  not DEBUG  ----- */
-            break;
-
-        case 'h':
-            do_help = 1;
-            break;
-
-        case ':': /* missing option arguement. */
-            fprintf(stderr, " option %s requires an argument. \n",
-                    argv[1]);
-            ifInvalid = TRUE;
-            break;
-
-        case '?':
-
-        default:
-            fprintf(stderr, "option %s is invalid : ignored\n",
-                    argv[1]);
-            ifInvalid = TRUE;
-            break;
-        }
-
+        BOOST_LOG_TRIVIAL(info) << "Input file : " << vm["file"].as<string>() << endl;
     }
-
-    /* We got the options. Do the stuff. */
-    if(TRUE == ifInvalid || 1 == do_help)
+    else
     {
-        std::cout<<"\n-------------------------------------------------------";
-        std::cout<<"\nUSAGE :";
-        std::cout<<"\n\t --file <name>"
-                 <<"\n\t\t provide the aiff file."
-                 <<"\n\t --help"
-                 <<"\n\t\t to see the help. Should be used alone."
-                 <<"\n\t --verbose"
-                 <<"\n\t\t for verbose output.";
-        std::cout<<"\n-------------------------------------------------------\n";
-        return EXIT_FAILURE;
+        BOOST_LOG_TRIVIAL(fatal) << "No input file provided" << endl;
+        return 0;
     }
 
     /* Read WAVE file */
+    string fileName = vm["file"].as<string>();
     WavLoader wavLoader = WavLoader(fileName);
+
 
     /*  Now remove the noise */
 //    bandpass(outVec, 2000, 6000, pWaveFile->fs_hz);

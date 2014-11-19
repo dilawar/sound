@@ -48,6 +48,7 @@ WavLoader::~WavLoader ()
 
 WavLoader::WavLoader(string filepath)
 {
+
     Aquila::WaveFile wav(filepath);
 }
 
