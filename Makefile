@@ -16,6 +16,9 @@ SUFFIXES =
 
 .SUFFIXES: .hpux_make_needs_suffix_list
 
+# Produce verbose output by default.
+VERBOSE = 1
+
 # Suppress display of executed commands.
 $(VERBOSE).SILENT:
 
@@ -102,6 +105,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named DSPFilters
+
+# Build rule for target.
+DSPFilters: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 DSPFilters
+.PHONY : DSPFilters
+
+# fast build rule for target.
+DSPFilters/fast:
+	$(MAKE) -f CMakeFiles/DSPFilters.dir/build.make CMakeFiles/DSPFilters.dir/build
+.PHONY : DSPFilters/fast
+
+#=============================================================================
 # Target rules for targets named songbird
 
 # Build rule for target.
@@ -140,6 +156,19 @@ wave/fast:
 	$(MAKE) -f wave/CMakeFiles/wave.dir/build.make wave/CMakeFiles/wave.dir/build
 .PHONY : wave/fast
 
+#=============================================================================
+# Target rules for targets named dsp
+
+# Build rule for target.
+dsp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 dsp
+.PHONY : dsp
+
+# fast build rule for target.
+dsp/fast:
+	$(MAKE) -f dsp/CMakeFiles/dsp.dir/build.make dsp/CMakeFiles/dsp.dir/build
+.PHONY : dsp/fast
+
 main.o: main.cc.o
 .PHONY : main.o
 
@@ -170,11 +199,13 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... DSPFilters"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... songbird"
 	@echo "... aiff"
 	@echo "... wave"
+	@echo "... dsp"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

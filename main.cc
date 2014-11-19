@@ -37,6 +37,7 @@
 
 #include  <iostream>
 #include "include/wav-file.h"
+#include "dsp/dsp.h"
 #include "aiff.h"
 #include <getopt.h>
 #include <stdlib.h>
@@ -151,7 +152,13 @@ int main(int argc, char** argv)
     /*  read a wave file and generate data. */
     WavFile* pWaveFile = new WavFile;
     vector<double> outVec;
-    pWaveFile->readWavFile(string(fileName), outVec, true);
+    vector<double> result;
+
+    pWaveFile->readWavFile(string(fileName), outVec, false);
+
+    lowpass<double>(outVec, result, 2000, pWaveFile->fs_hz);
+
+    /*  Now remove the noise */
 
     delete pWaveFile;
 

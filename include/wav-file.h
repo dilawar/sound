@@ -127,7 +127,6 @@ class WavFile
 
         /* ====================  DATA MEMBERS  ======================================= */
     protected:
-        double fs_hz;
         int bitsPerSample;
         int nChannel;
 
@@ -139,6 +138,8 @@ class WavFile
 
     public:
        
+        unsigned int fs_hz;
+
         /**
          * Read wave file and return a vector 
          */
