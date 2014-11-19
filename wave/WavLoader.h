@@ -20,8 +20,9 @@
 #define  WAVLOADER_INC
 
 #include <string>
+#include <vector>
 
-#include "aquila/source/WaveFile.h"
+#include "aquila/aquila.h"
 
 using namespace std;
 
@@ -37,8 +38,25 @@ class WavLoader
 
         WavLoader(string filepath);
 
+        /**
+         * @brief Save data to a file.
+         *
+         * @param outputfilename
+         */
+        void saveData(string outputfilename);
+
     private:
         /* data */
+
+    public:
+
+        /**
+         * @brief A vector to store the data.
+         */
+        vector<double> _data;
+
+        Aquila::WaveFile* pWav;
+
 };
 
 #endif   /* ----- #ifndef WAVLOADER_INC  ----- */

@@ -39,11 +39,25 @@
 #include "dsp/dsp.h"
 #include "global.h"
 #include <boost/program_options.hpp>
+#include <boost/log/core.hpp>
+#include <boost/log/expressions.hpp>
 
 using namespace std;
+namespace logging = boost::log;
+
+void init()
+{
+    logging::core::get()->set_filter
+        (
+         logging::trivial::severity >= logging::trivial::debug
+        );
+}
+
 
 int test_main(int argc, char** argv)
 {
+    init();
+
     namespace po = boost::program_options;
 
     po::options_description desc("Allowed options");
@@ -75,7 +89,10 @@ int test_main(int argc, char** argv)
 
     /* Read WAVE file */
     string fileName = vm["file"].as<string>();
+
     WavLoader wavLoader = WavLoader(fileName);
+    wavLoader.saveData(fileName+".dat");
+
 
 
     /*  Now remove the noise */

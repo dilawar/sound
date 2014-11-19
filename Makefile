@@ -169,29 +169,29 @@ dsp/fast:
 	$(MAKE) -f dsp/CMakeFiles/dsp.dir/build.make dsp/CMakeFiles/dsp.dir/build
 .PHONY : dsp/fast
 
-main.o: main.cc.o
-.PHONY : main.o
+core/main.o: core/main.cc.o
+.PHONY : core/main.o
 
 # target to build an object file
-main.cc.o:
-	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/main.cc.o
-.PHONY : main.cc.o
+core/main.cc.o:
+	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/core/main.cc.o
+.PHONY : core/main.cc.o
 
-main.i: main.cc.i
-.PHONY : main.i
+core/main.i: core/main.cc.i
+.PHONY : core/main.i
 
 # target to preprocess a source file
-main.cc.i:
-	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/main.cc.i
-.PHONY : main.cc.i
+core/main.cc.i:
+	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/core/main.cc.i
+.PHONY : core/main.cc.i
 
-main.s: main.cc.s
-.PHONY : main.s
+core/main.s: core/main.cc.s
+.PHONY : core/main.s
 
 # target to generate assembly for a file
-main.cc.s:
-	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/main.cc.s
-.PHONY : main.cc.s
+core/main.cc.s:
+	$(MAKE) -f CMakeFiles/songbird.dir/build.make CMakeFiles/songbird.dir/core/main.cc.s
+.PHONY : core/main.cc.s
 
 # Help Target
 help:
@@ -206,9 +206,9 @@ help:
 	@echo "... aiff"
 	@echo "... wave"
 	@echo "... dsp"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... core/main.o"
+	@echo "... core/main.i"
+	@echo "... core/main.s"
 .PHONY : help
 
 
