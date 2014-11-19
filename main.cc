@@ -156,7 +156,7 @@ int main(int argc, char** argv)
 
     pWaveFile->readWavFile(string(fileName), outVec, false);
 
-    lowpass<double>(outVec, result, 2000, pWaveFile->fs_hz);
+    lowpass(outVec, result, 2000, pWaveFile->fs_hz);
 
     /*  Now remove the noise */
 
