@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(songbird)
-add_definitions(-std=c++11)
+add_definitions(-g -std=c++11)
 INCLUDE_DIRECTORIES(aiff wave)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/DSPFilters/lib)
 

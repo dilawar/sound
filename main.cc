@@ -152,11 +152,9 @@ int main(int argc, char** argv)
     /*  read a wave file and generate data. */
     WavFile* pWaveFile = new WavFile;
     vector<double> outVec;
-    vector<double> result;
-
     pWaveFile->readWavFile(string(fileName), outVec, false);
 
-    lowpass(outVec, result, 2000, pWaveFile->fs_hz);
+    lowpass(outVec, 2000, pWaveFile->fs_hz);
 
     /*  Now remove the noise */
 
