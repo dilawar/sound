@@ -91,13 +91,10 @@ int test_main(int argc, char** argv)
     string fileName = vm["file"].as<string>();
 
     WavLoader wavLoader = WavLoader(fileName);
-    wavLoader.saveData(fileName+".dat");
 
+//    wavLoader.saveData(fileName+".dat");
 
-
-    /*  Now remove the noise */
-//    bandpass(outVec, 2000, 6000, pWaveFile->fs_hz);
-
+    bandpass(wavLoader._data, 1500, 10300, wavLoader.pWav->getSampleFrequency());
 }
 
 
