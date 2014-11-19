@@ -5,5 +5,5 @@ ADD_LIBRARY(dsp STATIC
     )
 
 TARGET_LINK_LIBRARIES(dsp 
-    DSPFilters
+    aquila
     )

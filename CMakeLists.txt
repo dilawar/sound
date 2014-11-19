@@ -7,7 +7,7 @@ INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRECTORIES})
 add_definitions(-g -std=c++11)
 
 INCLUDE_DIRECTORIES(aiff wave)
-LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/DSPFilters/lib)
+LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/aquila/lib)
 
 ADD_SUBDIRECTORY(aiff)
 ADD_SUBDIRECTORY(wave)
@@ -23,12 +23,9 @@ ExternalProject_Add(
     aquila
     PREFIX ${DSP_SOURCE_DIR}
     URL https://github.com/zsiciarz/aquila/archive/master.zip
-    #CONFIGURE_COMMAND ${DSP_SOURCE_DIR}/waf configure --prefix=${DSP_SOURCE_DIR}
-    #BUILD_COMMAND ${DSP_SOURCE_DIR}/waf build
-    #INSTALL_COMMAND ${DSP_SOURCE_DIR}/waf install
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
     ) 
-INCLUDE_DIRECTORIES(${SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${DSP_SOURCE_DIR}/include)
 
 TARGET_LINK_LIBRARIES(songbird
     aiff
