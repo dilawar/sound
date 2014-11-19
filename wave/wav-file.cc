@@ -458,6 +458,5 @@ int WavFile::writeDataToFile()
     }
     fclose(pFile);
     return EXIT_SUCCESS;
-
 }
 

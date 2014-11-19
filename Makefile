@@ -105,17 +105,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named DSPFilters
+# Target rules for targets named aquila
 
 # Build rule for target.
-DSPFilters: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 DSPFilters
-.PHONY : DSPFilters
+aquila: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 aquila
+.PHONY : aquila
 
 # fast build rule for target.
-DSPFilters/fast:
-	$(MAKE) -f CMakeFiles/DSPFilters.dir/build.make CMakeFiles/DSPFilters.dir/build
-.PHONY : DSPFilters/fast
+aquila/fast:
+	$(MAKE) -f CMakeFiles/aquila.dir/build.make CMakeFiles/aquila.dir/build
+.PHONY : aquila/fast
 
 #=============================================================================
 # Target rules for targets named songbird
@@ -199,7 +199,7 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... DSPFilters"
+	@echo "... aquila"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... songbird"

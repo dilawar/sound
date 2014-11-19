@@ -1,6 +1,11 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(songbird)
+
+FIND_PACKAGE(GTest REQUIRED)
+INCLUDE_DIRECTORIES(${GTEST_INCLUDE_DIRECTORIES})
+
 add_definitions(-g -std=c++11)
+
 INCLUDE_DIRECTORIES(aiff wave)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/DSPFilters/lib)
 
@@ -13,15 +18,15 @@ ADD_EXECUTABLE(songbird main.cc)
 SET(CMAKE_VERBOSE_MAKEFILE ON)
 
 include(ExternalProject)
-SET(DSP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/DSPFilters)
+SET(DSP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/aquila)
 ExternalProject_Add(
-    DSPFilters
-    PREFIX ${CMAKE_SOURCE_DIR}/external/DSPFilters
-    SOURCE_DIR  ${CMAKE_SOURCE_DIR}/external/DSPFilters
-    CONFIGURE_COMMAND ${DSP_SOURCE_DIR}/waf configure --prefix=${DSP_SOURCE_DIR}
-    BUILD_COMMAND ${DSP_SOURCE_DIR}/waf build
-    INSTALL_COMMAND ${DSP_SOURCE_DIR}/waf install
-    BUILD_IN_SOURCE 1
+    aquila
+    PREFIX ${DSP_SOURCE_DIR}
+    URL https://github.com/zsiciarz/aquila/archive/master.zip
+    #CONFIGURE_COMMAND ${DSP_SOURCE_DIR}/waf configure --prefix=${DSP_SOURCE_DIR}
+    #BUILD_COMMAND ${DSP_SOURCE_DIR}/waf build
+    #INSTALL_COMMAND ${DSP_SOURCE_DIR}/waf install
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
     ) 
 INCLUDE_DIRECTORIES(${SOURCE_DIR}/include)
 
@@ -30,5 +35,6 @@ TARGET_LINK_LIBRARIES(songbird
     wave
     asound
     dsp
+    ${GTEST_BOTH_LIBRARIES}
     )
 
