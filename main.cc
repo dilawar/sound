@@ -35,24 +35,22 @@
 #define TRUE            1
 #define FALSE           0
 
+#include "global.h"
 #include  <iostream>
 #include "include/wav-file.h"
 #include "dsp/dsp.h"
 #include "aiff.h"
 #include <getopt.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string>
-
 
 using namespace std;
 
-int main(int argc, char** argv)
+int test_main(int argc, char** argv)
 {
 #if DEBUG
     std::cout<<"Entering the main()\n";
     std::cout<<"\nNo of args are: "<<argc;
 #endif
+
     /* Here, we parse our argument passed to this application from command line*/
     if(argc < 2)
     {
@@ -149,16 +147,11 @@ int main(int argc, char** argv)
         return EXIT_FAILURE;
     }
 
-    /*  read a wave file and generate data. */
-    WavFile* pWaveFile = new WavFile;
-    vector<double> outVec;
-    pWaveFile->readWavFile(string(fileName), outVec, false);
-
-    lowpass(outVec, 2000, pWaveFile->fs_hz);
+    /* Read WAVE file */
+    WavLoader wavLoader = WavLoader(fileName);
 
     /*  Now remove the noise */
-
-    delete pWaveFile;
+//    bandpass(outVec, 2000, 6000, pWaveFile->fs_hz);
 
 }
 
