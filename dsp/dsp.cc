@@ -56,8 +56,10 @@ void bandpass(
     for(unsigned int i = 0; i < data.size(); i++)
         arrayData[i] = data[i];
 
+    /* Compute the fft of signal here  */
+
+
     /* Generate Aquila filter here. A */
-    // generate a low-pass filter spectrum
     const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;
     const Aquila::FrequencyType sampleFreq = samplingFrequency;
 

@@ -43,8 +43,8 @@ TARGET_LINK_LIBRARIES(songbird
     asound
     dsp
     ${Boost_LIBRARIES}
-    Aquila
     OouraFft
+    Aquila
     pthread
     ${GSL_LIBRARIES}
     )
