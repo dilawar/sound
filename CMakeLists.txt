@@ -1,7 +1,13 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(songbird)
 
+SET(CMAKE_MODULE_PATH cmake_modules)
+
 FIND_PACKAGE(Boost  COMPONENTS program_options unit_test_framework log REQUIRED)
+
+FIND_PACKAGE(GSL REQUIRED)
+INCLUDE_DIRECTORIES(${GSL_INCLUDE_DIRECTORY})
+
 INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRECTORIES} ${CMAKE_SOURCE_DIR})
 
 ADD_DEFINITIONS(-g -std=c++11)
@@ -15,7 +21,7 @@ SET(DSP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/aquila)
 ExternalProject_Add(
     aquila
     PREFIX ${DSP_SOURCE_DIR}
-    URL https://github.com/zsiciarz/aquila/archive/master.zip
+    GIT_REPOSITORY https://github.com/dilawar/aquila
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
     ) 
 INCLUDE_DIRECTORIES(${DSP_SOURCE_DIR}/include)
@@ -37,6 +43,9 @@ TARGET_LINK_LIBRARIES(songbird
     asound
     dsp
     ${Boost_LIBRARIES}
+    Aquila
+    OouraFft
     pthread
+    ${GSL_LIBRARIES}
     )
 

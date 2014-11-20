@@ -44,6 +44,7 @@ void bandpass(
         , unsigned int cutoffA
         , unsigned int cutoffB
         , unsigned int samplingFrequency
+        , const size_t SIZE
         )
 {
     BOOST_LOG_TRIVIAL(info) << "Cutoff (" << cutoffA << "," << cutoffB 
@@ -57,7 +58,6 @@ void bandpass(
 
     /* Generate Aquila filter here. A */
     // generate a low-pass filter spectrum
-    const size_t SIZE = 64;
     const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;
     const Aquila::FrequencyType sampleFreq = samplingFrequency;
 
