@@ -57,7 +57,7 @@ void bandpass(
         arrayData[i] = data[i];
 
     /* Compute the fft of signal here  */
-
+    auto fft = Aquila::FftFactory::getFft(SIZE);
 
     /* Generate Aquila filter here. A */
     const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;

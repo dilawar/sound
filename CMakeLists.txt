@@ -2,6 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(songbird)
 
 SET(CMAKE_MODULE_PATH cmake_modules)
+SET(CMAKE_VERSBOSE_MAKEFILE ON)
 
 FIND_PACKAGE(Boost  COMPONENTS program_options unit_test_framework log REQUIRED)
 
@@ -43,8 +44,8 @@ TARGET_LINK_LIBRARIES(songbird
     asound
     dsp
     ${Boost_LIBRARIES}
-    OouraFft
     Aquila
+    OouraFft
     pthread
     ${GSL_LIBRARIES}
     )
