@@ -94,7 +94,8 @@ int test_main(int argc, char** argv)
 
 //    wavLoader.saveData(fileName+".dat");
 
-    bandpass(wavLoader._data, 1500, 10300, wavLoader.pWav->getSampleFrequency());
+    vector<double> filteredData;
+    bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.pWav->getSampleFrequency());
 }
 
 

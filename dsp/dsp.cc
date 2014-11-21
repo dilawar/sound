@@ -41,17 +41,19 @@ using namespace std;
  */
 void bandpass(
         vector<double>& data
+        , vector<double>& outData
         , unsigned int cutoffA
         , unsigned int cutoffB
-        , unsigned int samplingFrequency
-        , const size_t SIZE
+        , const size_t samplingFrequency
         )
 {
+    const size_t SIZE = data.size();
+
     BOOST_LOG_TRIVIAL(info) << "Cutoff (" << cutoffA << "," << cutoffB 
         << ") sampling freq " << samplingFrequency << endl;
 
     double* arrayData;
-    arrayData = new double[data.size()];
+    arrayData = new double[SIZE];
 
     for(unsigned int i = 0; i < data.size(); i++)
         arrayData[i] = data[i];
@@ -59,6 +61,13 @@ void bandpass(
     /* Compute the fft of signal here  */
     auto fft = Aquila::FftFactory::getFft(SIZE);
     Aquila::SpectrumType spectrum = fft->fft(arrayData);
+
+
+#if  0     /* ----- #if 0 : If0Label_1 ----- */
+    /* Plot before filtering */
+    Aquila::TextPlot plt("Signal waveform before filtration");
+    plt.plot(arrayData, SIZE);
+#endif     /* ----- #if 0 : If0Label_1 ----- */
 
     /* Generate Aquila filter here. A */
     const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;
@@ -73,9 +82,31 @@ void bandpass(
             filterSpectrum[i] = 0.0;
     }
 
-    Aquila::TextPlot plt("Signal waveform before filtration");
+
+#if  0     /* ----- #if 0 : If0Label_2 ----- */
     plt.setTitle("Filter spectrum");
     plt.plotSpectrum(filterSpectrum);
+#endif     /* ----- #if 0 : If0Label_2 ----- */
 
+
+    /* multiply both spectrum */
+    transform(
+            begin(spectrum)
+            , end(spectrum)
+            , begin(filterSpectrum)
+            , begin(spectrum)
+            , [] (Aquila::ComplexType x, Aquila::ComplexType y) { return x * y;}
+            );
+
+    /* Get inverse fft */
+    double x1[SIZE];
+    fft->ifft(spectrum, x1);
+
+#if  0     /* ----- #if 0 : If0Label_3 ----- */
+    plt.setTitle("Signal after filteration");
+    plt.plot(x1, SIZE);
+#endif     /* ----- #if 0 : If0Label_3 ----- */
+
+//    outData.assign(x1, x1 + SIZE);
     delete[] arrayData;
 }

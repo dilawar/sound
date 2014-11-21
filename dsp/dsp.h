@@ -23,9 +23,10 @@
 
 using namespace std;
 
-void bandpass(vector<double>& data,  unsigned int cutoffA, unsigned int cutoffB
-        , unsigned int samplingFrequency
-        , const std::size_t SIZE = 64
+void bandpass(vector<double>& data
+        , vector<double>& outData
+        , unsigned int cutoffA, unsigned int cutoffB
+        , const size_t samplingFrequency
         );
 
 #endif   /* ----- #ifndef DSP_INC  ----- */
