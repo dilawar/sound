@@ -4,8 +4,6 @@ PROJECT(songbird)
 SET(CMAKE_MODULE_PATH cmake_modules)
 SET(CMAKE_VERSBOSE_MAKEFILE ON)
 
-FIND_PACKAGE(Boost  COMPONENTS program_options unit_test_framework log REQUIRED)
-
 INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRECTORIES} ${CMAKE_SOURCE_DIR})
 
 ADD_DEFINITIONS(-g -std=c++11)
@@ -40,7 +38,6 @@ TARGET_LINK_LIBRARIES(songbird
     wave
     asound
     dsp
-    ${Boost_LIBRARIES}
     Aquila
     OouraFft
     pthread

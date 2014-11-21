@@ -54,19 +54,19 @@ WavLoader::WavLoader(string filepath)
     pWav = new Aquila::WaveFile(filepath);
 
 
-    BOOST_LOG_TRIVIAL(info) << "Filename: "           << pWav->getFilename();
-    BOOST_LOG_TRIVIAL(info) << "Length: "           << pWav->getAudioLength()     << " ms";
-    BOOST_LOG_TRIVIAL(info) << "Sample frequency: " << pWav->getSampleFrequency() << " Hz";
-    BOOST_LOG_TRIVIAL(info) << "Channels: "         << pWav->getChannelsNum();
-    BOOST_LOG_TRIVIAL(info) << "Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
-    BOOST_LOG_TRIVIAL(info) << "Bits per sample: "  << pWav->getBitsPerSample() << "b";
+    cerr << "Filename: "           << pWav->getFilename();
+    cerr << endl << "Length: "           << pWav->getAudioLength()     << " ms";
+    cerr << endl << "Sample frequency: " << pWav->getSampleFrequency() << " Hz";
+    cerr << endl << "Channels: "         << pWav->getChannelsNum();
+    cerr << endl << "Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
+    cerr << endl << "Bits per sample: "  << pWav->getBitsPerSample() << "b";
 
-    BOOST_LOG_TRIVIAL(info) << "Collecting data into vector" << endl;
+    cerr << endl << "Collecting data into vector" << endl;
 
     for(auto it = pWav->begin(); it != pWav->end(); ++it)
         _data.push_back(*it);
 
-    BOOST_LOG_TRIVIAL(debug) << "Total " << _data.size() << " samples.";
+    cerr << endl << "Total " << _data.size() << " samples.";
 }
 
 /**
@@ -77,7 +77,7 @@ WavLoader::WavLoader(string filepath)
 void WavLoader::saveData(string outfile)
 {
 
-    BOOST_LOG_TRIVIAL(info) << "Saving data to " << outfile;
+    cerr << "Saving data to " << outfile;
 
     ofstream outf(outfile);
     unsigned int i = 0;

@@ -22,8 +22,6 @@
 #include "aquila/source/generator/SineGenerator.h"
 #include "aquila/transform/FftFactory.h"
 #include "aquila/tools/TextPlot.h"
-#include <boost/log/trivial.hpp>
-#include <boost/test/minimal.hpp>
 #include <algorithm>
 #include <functional>
 #include <memory>

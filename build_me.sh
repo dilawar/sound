@@ -4,6 +4,9 @@ set -x
 cmake .
 make
 echo "Processing file."
-#gdb --args ./songbird --file ./Data/Kodi/kod1.tape1A.080123.085848.wav
-./songbird --file ./Data/Kodi/kod1.tape1A.080123.085848.wav
+if [[ "$1" = "x" ]]; then
+    gdb --args ./songbird --file ./Data/Kodi/kod1.tape1A.080123.085848.wav
+else
+    ./songbird --file ./Data/Kodi/kod1.tape1A.080123.085848.wav
+fi
 

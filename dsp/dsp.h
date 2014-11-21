@@ -23,9 +23,10 @@
 
 using namespace std;
 
-void bandpass(vector<double>& data
+int bandpass(vector<double>& data
         , vector<double>& outData
-        , unsigned int cutoffA, unsigned int cutoffB
+        , unsigned int cutoffA
+        , unsigned int cutoffB
         , const size_t samplingFrequency
         );
 

@@ -39,7 +39,7 @@ using namespace std;
  * @param  Cutoff B.
  * @param  Sampling frequency.
  */
-void bandpass(
+int bandpass(
         vector<double>& data
         , vector<double>& outData
         , unsigned int cutoffA
@@ -49,7 +49,7 @@ void bandpass(
 {
     const size_t SIZE = data.size();
 
-    BOOST_LOG_TRIVIAL(info) << "Cutoff (" << cutoffA << "," << cutoffB 
+    cerr << "Cutoff (" << cutoffA << "," << cutoffB 
         << ") sampling freq " << samplingFrequency << endl;
 
     double* arrayData;
@@ -107,6 +107,7 @@ void bandpass(
     plt.plot(x1, SIZE);
 #endif     /* ----- #if 0 : If0Label_3 ----- */
 
-//    outData.assign(x1, x1 + SIZE);
+    outData.assign(x1, x1 + SIZE);
     delete[] arrayData;
+    return EXIT_SUCCESS;
 }

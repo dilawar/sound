@@ -38,64 +38,19 @@
 #include "WavLoader.h"
 #include "dsp/dsp.h"
 #include "global.h"
-#include <boost/program_options.hpp>
-#include <boost/log/core.hpp>
-#include <boost/log/expressions.hpp>
 
 using namespace std;
-namespace logging = boost::log;
 
-void init()
+int main(int argc, char** argv)
 {
-    logging::core::get()->set_filter
-        (
-         logging::trivial::severity >= logging::trivial::debug
-        );
-}
-
-
-int test_main(int argc, char** argv)
-{
-    init();
-
-    namespace po = boost::program_options;
-
-    po::options_description desc("Allowed options");
-
-    desc.add_options()
-        ("help", "Produce help message")
-        ("file", po::value<string>(), "Input sound file (wav format)")
-        ;
-
-    po::variables_map vm;
-    po::store(po::parse_command_line(argc, argv, desc), vm);
-    po::notify(vm);
-
-    if(vm.count("help"))
-    {
-        cout << desc << endl;
-        return 1;
-    }
-
-    if(vm.count("file"))
-    {
-        BOOST_LOG_TRIVIAL(info) << "Input file : " << vm["file"].as<string>() << endl;
-    }
-    else
-    {
-        BOOST_LOG_TRIVIAL(fatal) << "No input file provided" << endl;
-        return 0;
-    }
-
-    /* Read WAVE file */
-    string fileName = vm["file"].as<string>();
-
-    WavLoader wavLoader = WavLoader(fileName);
+    string filename = string(argv[1]);
+    WavLoader wavLoader = WavLoader(filename);
 
 //    wavLoader.saveData(fileName+".dat");
 
     vector<double> filteredData;
     bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.pWav->getSampleFrequency());
+    cerr << "Signal is filtered.";
 }
 
 
