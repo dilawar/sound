@@ -47,7 +47,14 @@ int bandpass(
         , const size_t samplingFrequency
         )
 {
-    const size_t SIZE = data.size();
+    size_t SIZE = data.size();
+
+    if(SIZE % 2 != 0)
+    {
+        DUMP("Not a multiple of 2. Erasing one element from data", "INFO");
+        SIZE -= 1;
+        data.erase(data.end());
+    }
 
     DUMP("Cutoff (" << cutoffA << "," << cutoffB << ") sampling freq  " 
             << samplingFrequency << " Total samples " << SIZE
@@ -64,8 +71,9 @@ int bandpass(
         i++;
     }
 
-    /* Compute the fft of signal here  */
     EXPECT_EQ(i, SIZE, "Unequal size data");
+
+    /* Compute the fft of signal here  */
     auto fft = Aquila::FftFactory::getFft(SIZE);
     Aquila::SpectrumType spectrum = fft->fft(arrayData);
 
