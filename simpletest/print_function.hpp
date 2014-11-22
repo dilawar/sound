@@ -226,7 +226,7 @@ inline void log(string msg, string type = "DEBUG"
     formattedMsg( msg );
 
     fstream logF;
-    logF.open( __logfile__, ios::app);
+//    logF.open( __logfile__, ios::app);
     time_t rawtime; time(&rawtime);
     struct tm* timeinfo;
     timeinfo = localtime(&rawtime);

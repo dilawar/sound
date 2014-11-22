@@ -22,9 +22,6 @@
 #include <vector>
 #include <array>
 #include <iostream>
-#include "aquila/global.h"
-#include "aquila/transform/FftFactory.h"
-#include "aquila/tools/TextPlot.h"
 #include <algorithm>
 #include <functional>
 #include <memory>
@@ -73,55 +70,5 @@ int bandpass(
 
     EXPECT_EQ(i, SIZE, "Unequal size data");
 
-    /* Compute the fft of signal here  */
-    auto fft = Aquila::FftFactory::getFft(SIZE);
-    Aquila::SpectrumType spectrum = fft->fft(arrayData);
-
-
-#if  0     /* ----- #if 0 : If0Label_1 ----- */
-    /* Plot before filtering */
-    Aquila::TextPlot plt("Signal waveform before filtration");
-    plt.plot(arrayData, SIZE);
-#endif     /* ----- #if 0 : If0Label_1 ----- */
-
-    /* Generate Aquila filter here. A */
-    const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;
-    const Aquila::FrequencyType sampleFreq = samplingFrequency;
-#if  0     /* ----- #if 0 : If0Label_2 ----- */
-
-    Aquila::SpectrumType filterSpectrum(SIZE);
-    for (std::size_t i = 0; i < SIZE; ++i)
-    {
-        if (i > (SIZE * f_lp / sampleFreq) && i < (SIZE * f_hp / sampleFreq))
-            filterSpectrum[i] = 1.0;
-        else
-            filterSpectrum[i] = 0.0;
-    }
-
-
-    plt.setTitle("Filter spectrum");
-    plt.plotSpectrum(filterSpectrum);
-
-
-    /* multiply both spectrum */
-    transform(
-            begin(spectrum)
-            , end(spectrum)
-            , begin(filterSpectrum)
-            , begin(spectrum)
-            , [] (Aquila::ComplexType x, Aquila::ComplexType y) { return x * y;}
-            );
-
-    /* Get inverse fft */
-    double* x1;
-    x1 = new double[SIZE];
-    fft->ifft(spectrum, x1);
-
-    plt.setTitle("Signal after filteration");
-    plt.plot(x1, SIZE);
-
-    outData.assign(x1, x1 + SIZE);
-#endif     /* ----- #if 0 : If0Label_3 ----- */
-
-    return EXIT_SUCCESS;
+   return EXIT_SUCCESS;
 }

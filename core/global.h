@@ -18,10 +18,6 @@
 #ifndef  GLOBAL_INC
 #define  GLOBAL_INC
 
-#include "aquila/global.h"
-#include "aquila/source/generator/SineGenerator.h"
-#include "aquila/transform/FftFactory.h"
-#include "aquila/tools/TextPlot.h"
 #include <algorithm>
 #include <functional>
 #include <memory>

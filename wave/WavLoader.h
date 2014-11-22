@@ -21,10 +21,10 @@
 
 #include <string>
 #include <vector>
-
-#include "aquila/aquila.h"
+#include "wav-file.h"
 
 using namespace std;
+
 
 /**
  * @brief Class to load WaveFile using Aquila.
@@ -55,7 +55,7 @@ class WavLoader
          */
         vector<double> _data;
 
-        Aquila::WaveFile* pWav;
+        WavFile wav;
 
 };
 

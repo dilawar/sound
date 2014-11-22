@@ -4,24 +4,27 @@ PROJECT(songbird)
 SET(CMAKE_MODULE_PATH cmake_modules)
 SET(CMAKE_VERSBOSE_MAKEFILE ON)
 
-INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRECTORIES} ${CMAKE_SOURCE_DIR})
+FIND_PACKAGE(GSL REQUIRED)
+INCLUDE_DIRECTORIES(${GSL_INCLUDE_DIR})
+
+#INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRECTORIES} ${CMAKE_SOURCE_DIR})
 
 ADD_DEFINITIONS(-g -std=c++11)
-ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK -DBOOST_TEST_DYN_LINK)
+#ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK -DBOOST_TEST_DYN_LINK)
 
-INCLUDE_DIRECTORIES(aiff wave simpletest)
-LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/aquila/lib)
+INCLUDE_DIRECTORIES(dsp aiff wave simpletest)
 
-include(ExternalProject)
-SET(DSP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/aquila)
-ExternalProject_Add(
-    aquila
-    PREFIX ${DSP_SOURCE_DIR}
-    GIT_REPOSITORY https://github.com/dilawar/aquila
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
-    ) 
-
-INCLUDE_DIRECTORIES(${DSP_SOURCE_DIR}/include)
+#LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/aquila/lib)
+#include(ExternalProject)
+#SET(DSP_SOURCE_DIR ${CMAKE_SOURCE_DIR}/external/aquila)
+#ExternalProject_Add(
+#    aquila
+#    PREFIX ${DSP_SOURCE_DIR}
+#    GIT_REPOSITORY https://github.com/dilawar/aquila
+#    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
+#    ) 
+#
+#INCLUDE_DIRECTORIES(${DSP_SOURCE_DIR}/include)
 
 
 ADD_SUBDIRECTORY(aiff)
@@ -40,9 +43,8 @@ TARGET_LINK_LIBRARIES(songbird
     wave
     asound
     dsp
-    Aquila
-    OouraFft
     pthread
     simpletest
+    ${GSL_LIBRARIES}
     )
 

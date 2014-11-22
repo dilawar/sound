@@ -36,7 +36,7 @@
 #define FALSE           0
 
 #include "WavLoader.h"
-#include "dsp/dsp.h"
+#include "dsp.h"
 #include "global.h"
 
 using namespace std;

@@ -3,10 +3,11 @@ set -e
 #set -x
 cmake .
 make
+datafile=./Data/mr1.220405.wav
 echo "Processing file."
 if [[ "$1" = "x" ]]; then
-    gdb --args ./songbird ./Data/Kodi/kod1.tape1A.080123.085848.wav
+    gdb --args ./songbird $datafile
 else
-    ./songbird ./Data/Kodi/kod1.tape1A.080123.085848.wav
+    ./songbird $datafile
 fi
 
