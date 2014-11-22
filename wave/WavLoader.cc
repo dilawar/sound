@@ -54,19 +54,17 @@ WavLoader::WavLoader(string filepath)
 
     stringstream s;
     s << "Filename: "           << pWav->getFilename();
-    s << endl << "- Length: "           << pWav->getAudioLength()     << " ms";
-    s << endl << "- Sample frequency: " << pWav->getSampleFrequency() << " Hz";
-    s << endl << "- Channels: "         << pWav->getChannelsNum();
-    s << endl << "- Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
-    s << endl << "- Bits per sample: "  << pWav->getBitsPerSample() << "b";
+    s << endl << "Length: "           << pWav->getAudioLength()     << " ms";
+    s << endl << "Sample frequency: " << pWav->getSampleFrequency() << " Hz";
+    s << endl << "Channels: "         << pWav->getChannelsNum();
+    s << endl << "Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
+    s << endl << "Bits per sample: "  << pWav->getBitsPerSample() << "b";
+    s << endl << "Total frames: " << pWav->getSamplesCount();
     DUMP(s.str(), "INFO");
-
-    cerr << endl << "Collecting data into vector" << endl;
 
     for(auto it = pWav->begin(); it != pWav->end(); ++it)
         _data.push_back(*it);
 
-    DUMP("Total " << _data.size() << " samples.", "DEBUG");
 }
 
 /**
@@ -77,7 +75,7 @@ WavLoader::WavLoader(string filepath)
 void WavLoader::saveData(string outfile)
 {
 
-    cerr << "Saving data to " << outfile;
+    DUMP("Saving data to " << outfile, "DEBUG");
 
     ofstream outf(outfile);
     unsigned int i = 0;

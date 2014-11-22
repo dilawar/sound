@@ -25,7 +25,6 @@
 #include "aquila/global.h"
 #include "aquila/transform/FftFactory.h"
 #include "aquila/tools/TextPlot.h"
-#include <boost/log/trivial.hpp>
 #include <algorithm>
 #include <functional>
 #include <memory>
@@ -56,12 +55,17 @@ int bandpass(
         );
 
     double* arrayData;
-    arrayData = new double[SIZE];
+    arrayData = new double[SIZE+1];
 
-    for(unsigned int i = 0; i < data.size(); i++)
-        arrayData[i] = data[i];
+    unsigned int i = 0;
+    for(auto it = data.begin(); it != data.end(); it++)
+    {
+        arrayData[i] = *it;
+        i++;
+    }
 
     /* Compute the fft of signal here  */
+    EXPECT_EQ(i, SIZE, "Unequal size data");
     auto fft = Aquila::FftFactory::getFft(SIZE);
     Aquila::SpectrumType spectrum = fft->fft(arrayData);
 
@@ -75,6 +79,7 @@ int bandpass(
     /* Generate Aquila filter here. A */
     const Aquila::FrequencyType f_lp = cutoffA, f_hp = cutoffB;
     const Aquila::FrequencyType sampleFreq = samplingFrequency;
+#if  0     /* ----- #if 0 : If0Label_2 ----- */
 
     Aquila::SpectrumType filterSpectrum(SIZE);
     for (std::size_t i = 0; i < SIZE; ++i)
@@ -86,7 +91,6 @@ int bandpass(
     }
 
 
-#if  0     /* ----- #if 0 : If0Label_2 ----- */
     plt.setTitle("Filter spectrum");
     plt.plotSpectrum(filterSpectrum);
 

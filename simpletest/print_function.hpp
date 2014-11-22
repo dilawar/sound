@@ -53,7 +53,7 @@
 using namespace std;
 
 extern ostringstream __outss;
-
+extern string __logfile__;
 
 /* 
  * ===  FUNCTION  ==============================================================
@@ -147,7 +147,7 @@ inline void dump(string msg, string type = "DEBUG", bool autoFormat = true)
     return;
 #else
     stringstream ss;
-    ss << "[" << type << "] ";
+    ss << "[" << setw(5) << type << "] ";
     bool set = false;
     bool reset = true;
     string color = T_GREEN;
@@ -180,7 +180,7 @@ inline void dump(string msg, string type = "DEBUG", bool autoFormat = true)
             }
         }
         else if('\n' == msg[i])
-            ss << "\n + ";
+            ss << "\n" << setw(5) << " |- ";
         else
             ss << msg[i];
     }
@@ -194,7 +194,8 @@ inline void dump(string msg, string type = "DEBUG", bool autoFormat = true)
 
 /* A macro would be cool. */
 #define DUMP(a, t) \
-    __outss << a << endl;\
+    __outss.str(""); \
+    __outss << a;\
     dump(__outss.str(), t); \
 
 /*-----------------------------------------------------------------------------
@@ -225,7 +226,7 @@ inline void log(string msg, string type = "DEBUG"
     formattedMsg( msg );
 
     fstream logF;
-    logF.open( "__moose__.log", ios::app);
+    logF.open( __logfile__, ios::app);
     time_t rawtime; time(&rawtime);
     struct tm* timeinfo;
     timeinfo = localtime(&rawtime);

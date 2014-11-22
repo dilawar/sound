@@ -27,5 +27,6 @@
 #include <memory>
 #include "simple_test.hpp"
 #include "simple_logger.hpp"
+#include "testing_macros.hpp"
 
 #endif   /* ----- #ifndef GLOBAL_INC  ----- */

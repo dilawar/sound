@@ -17,5 +17,7 @@
  */
 
 #include <sstream>
+#include <string>
 #include "print_function.hpp"
 ostringstream __outss;
+string __logfile__ = "__log__.txt";

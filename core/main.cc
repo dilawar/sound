@@ -47,7 +47,10 @@ int main(int argc, char** argv)
     DUMP( "Opening file " << filename, "INFO");
 
     WavLoader wavLoader = WavLoader(filename);
-//    wavLoader.saveData(filename+".dat");
+
+#if SAVE_DATA
+    wavLoader.saveData(filename+".dat");
+#endif
 
     vector<double> filteredData;
     bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.pWav->getSampleFrequency());
