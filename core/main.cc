@@ -44,13 +44,14 @@ using namespace std;
 int main(int argc, char** argv)
 {
     string filename = string(argv[1]);
-    WavLoader wavLoader = WavLoader(filename);
+    DUMP( "Opening file " << filename, "INFO");
 
-//    wavLoader.saveData(fileName+".dat");
+    WavLoader wavLoader = WavLoader(filename);
+//    wavLoader.saveData(filename+".dat");
 
     vector<double> filteredData;
     bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.pWav->getSampleFrequency());
-    cerr << "Signal is filtered.";
+    DUMP("Signal is filtered.", "DEBUG");
 }
 
 

@@ -52,6 +52,9 @@
 
 using namespace std;
 
+extern ostringstream __outss;
+
+
 /* 
  * ===  FUNCTION  ==============================================================
  *         Name:  mapToString
@@ -138,8 +141,6 @@ inline string debugPrint(string msg, string prefix = "DEBUG"
  *  This function dumps a message onto console. Fills appropriate colors as
  *  needed. What can I do, I love colors.
  *-----------------------------------------------------------------------------*/
-
-
 inline void dump(string msg, string type = "DEBUG", bool autoFormat = true)
 {
 #if QUIET_MODE || VERBOSITY < 0
@@ -193,9 +194,8 @@ inline void dump(string msg, string type = "DEBUG", bool autoFormat = true)
 
 /* A macro would be cool. */
 #define DUMP(a, t) \
-    ostringstream ss; \
-    ss << a << endl;\
-    dump(ss.str(), t); \
+    __outss << a << endl;\
+    dump(__outss.str(), t); \
 
 /*-----------------------------------------------------------------------------
  *  Log to a file, and also to console.

@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/dilawar/Work/GITHUB/sound
+CMAKE_SOURCE_DIR = /home/dilawar/Work/REDMINE/sound
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/dilawar/Work/GITHUB/sound
+CMAKE_BINARY_DIR = /home/dilawar/Work/REDMINE/sound
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -72,9 +72,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dilawar/Work/GITHUB/sound/CMakeFiles /home/dilawar/Work/GITHUB/sound/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dilawar/Work/REDMINE/sound/CMakeFiles /home/dilawar/Work/REDMINE/sound/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dilawar/Work/GITHUB/sound/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dilawar/Work/REDMINE/sound/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -166,6 +166,32 @@ dsp/fast:
 	$(MAKE) -f dsp/CMakeFiles/dsp.dir/build.make dsp/CMakeFiles/dsp.dir/build
 .PHONY : dsp/fast
 
+#=============================================================================
+# Target rules for targets named simplelogger
+
+# Build rule for target.
+simplelogger: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simplelogger
+.PHONY : simplelogger
+
+# fast build rule for target.
+simplelogger/fast:
+	$(MAKE) -f simpletest/CMakeFiles/simplelogger.dir/build.make simpletest/CMakeFiles/simplelogger.dir/build
+.PHONY : simplelogger/fast
+
+#=============================================================================
+# Target rules for targets named simpletest
+
+# Build rule for target.
+simpletest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 simpletest
+.PHONY : simpletest
+
+# fast build rule for target.
+simpletest/fast:
+	$(MAKE) -f simpletest/CMakeFiles/simpletest.dir/build.make simpletest/CMakeFiles/simpletest.dir/build
+.PHONY : simpletest/fast
+
 core/main.o: core/main.cc.o
 .PHONY : core/main.o
 
@@ -203,6 +229,8 @@ help:
 	@echo "... aiff"
 	@echo "... wave"
 	@echo "... dsp"
+	@echo "... simplelogger"
+	@echo "... simpletest"
 	@echo "... core/main.o"
 	@echo "... core/main.i"
 	@echo "... core/main.s"

@@ -25,5 +25,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include "simple_test.hpp"
+#include "simple_logger.hpp"
 
 #endif   /* ----- #ifndef GLOBAL_INC  ----- */

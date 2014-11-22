@@ -18,11 +18,10 @@
 
 
 #include "WavLoader.h"
-#include <boost/log/trivial.hpp>
+#include "global.h"
 #include <string>
 
 using namespace std;
-using namespace boost;
 
 /*
  *-------------------------------------------------------------------------------
@@ -53,13 +52,14 @@ WavLoader::WavLoader(string filepath)
 {
     pWav = new Aquila::WaveFile(filepath);
 
-
-    cerr << "Filename: "           << pWav->getFilename();
-    cerr << endl << "Length: "           << pWav->getAudioLength()     << " ms";
-    cerr << endl << "Sample frequency: " << pWav->getSampleFrequency() << " Hz";
-    cerr << endl << "Channels: "         << pWav->getChannelsNum();
-    cerr << endl << "Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
-    cerr << endl << "Bits per sample: "  << pWav->getBitsPerSample() << "b";
+    stringstream s;
+    s << "Filename: "           << pWav->getFilename();
+    s << endl << "- Length: "           << pWav->getAudioLength()     << " ms";
+    s << endl << "- Sample frequency: " << pWav->getSampleFrequency() << " Hz";
+    s << endl << "- Channels: "         << pWav->getChannelsNum();
+    s << endl << "- Byte rate: "        << pWav->getBytesPerSec()/1024 << " kB/s";
+    s << endl << "- Bits per sample: "  << pWav->getBitsPerSample() << "b";
+    DUMP(s.str(), "INFO");
 
     cerr << endl << "Collecting data into vector" << endl;
 

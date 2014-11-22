@@ -9,7 +9,7 @@ INCLUDE_DIRECTORIES(${BOOST_INCLUDE_DIRECTORIES} ${CMAKE_SOURCE_DIR})
 ADD_DEFINITIONS(-g -std=c++11)
 ADD_DEFINITIONS(-DBOOST_LOG_DYN_LINK -DBOOST_TEST_DYN_LINK)
 
-INCLUDE_DIRECTORIES(aiff wave)
+INCLUDE_DIRECTORIES(aiff wave simpletest)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/external/aquila/lib)
 
 include(ExternalProject)
@@ -20,12 +20,14 @@ ExternalProject_Add(
     GIT_REPOSITORY https://github.com/dilawar/aquila
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${DSP_SOURCE_DIR}
     ) 
+
 INCLUDE_DIRECTORIES(${DSP_SOURCE_DIR}/include)
 
 
 ADD_SUBDIRECTORY(aiff)
 ADD_SUBDIRECTORY(wave)
 ADD_SUBDIRECTORY(dsp)
+ADD_SUBDIRECTORY(simpletest)
 
 ADD_EXECUTABLE(songbird core/main.cc)
 
@@ -41,5 +43,6 @@ TARGET_LINK_LIBRARIES(songbird
     Aquila
     OouraFft
     pthread
+    simpletest
     )
 

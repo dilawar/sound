@@ -18,6 +18,7 @@
 
 
 #include "dsp.h"
+#include "global.h"
 #include <vector>
 #include <array>
 #include <iostream>
@@ -49,8 +50,10 @@ int bandpass(
 {
     const size_t SIZE = data.size();
 
-    cerr << "Cutoff (" << cutoffA << "," << cutoffB 
-        << ") sampling freq " << samplingFrequency << endl;
+    DUMP("Cutoff (" << cutoffA << "," << cutoffB << ") sampling freq  " << samplingFrequency 
+            << " Total samples " << SIZE
+            , "INFO"
+        );
 
     double* arrayData;
     arrayData = new double[SIZE];
@@ -86,7 +89,6 @@ int bandpass(
 #if  0     /* ----- #if 0 : If0Label_2 ----- */
     plt.setTitle("Filter spectrum");
     plt.plotSpectrum(filterSpectrum);
-#endif     /* ----- #if 0 : If0Label_2 ----- */
 
 
     /* multiply both spectrum */
@@ -99,15 +101,15 @@ int bandpass(
             );
 
     /* Get inverse fft */
-    double x1[SIZE];
+    double* x1;
+    x1 = new double[SIZE];
     fft->ifft(spectrum, x1);
 
-#if  0     /* ----- #if 0 : If0Label_3 ----- */
     plt.setTitle("Signal after filteration");
     plt.plot(x1, SIZE);
-#endif     /* ----- #if 0 : If0Label_3 ----- */
 
     outData.assign(x1, x1 + SIZE);
-    delete[] arrayData;
+#endif     /* ----- #if 0 : If0Label_3 ----- */
+
     return EXIT_SUCCESS;
 }
