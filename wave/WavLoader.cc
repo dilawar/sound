@@ -66,7 +66,7 @@ WavLoader::WavLoader(string filepath)
     for(auto it = pWav->begin(); it != pWav->end(); ++it)
         _data.push_back(*it);
 
-    cerr << endl << "Total " << _data.size() << " samples.";
+    DUMP("Total " << _data.size() << " samples.", "DEBUG");
 }
 
 /**

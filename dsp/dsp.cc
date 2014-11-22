@@ -50,8 +50,8 @@ int bandpass(
 {
     const size_t SIZE = data.size();
 
-    DUMP("Cutoff (" << cutoffA << "," << cutoffB << ") sampling freq  " << samplingFrequency 
-            << " Total samples " << SIZE
+    DUMP("Cutoff (" << cutoffA << "," << cutoffB << ") sampling freq  " 
+            << samplingFrequency << " Total samples " << SIZE
             , "INFO"
         );
 
