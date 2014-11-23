@@ -57,6 +57,8 @@ class WavLoader
 
         WavFile wav;
 
+        unsigned int samplingFreq;
+
 };
 
 #endif   /* ----- #ifndef WAVLOADER_INC  ----- */

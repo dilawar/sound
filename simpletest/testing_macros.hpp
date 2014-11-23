@@ -6,8 +6,7 @@
  *    Description:  This file contains some macros useful in testing. 
  *
  *        Version:  1.0
- *        Created:  Monday 19 May 2014 05:04:41  IST
- *       Revision:  none
+ *        Created:  Monday 19 May 2014 05:04:41  IST *       Revision:  none
  *       Compiler:  gcc
  *
  *         Author:  Dilawar Singh (), dilawars@ncbs.res.in
@@ -143,5 +142,14 @@ static ostringstream assertStream;
     assertStream.str(""); \
     assertStream << msg; \
     throw FatalTestFailure( assertStream.str() ); \
+
+#define ASSERT_EQ(a, b, msg) \
+    if( (a) != (b)) { \
+        assertStream.str(""); \
+        LOCATION(assertStream) \
+        assertStream << "Expected " << a << ", received " << b  << endl; \
+        assertStream << token << endl; \
+        throw FatalTestFailure( assertStream.str() ); \
+    }
 
 #endif   /* ----- #ifndef TESTING_MACROS_INC  ----- */

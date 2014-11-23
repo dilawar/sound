@@ -51,9 +51,8 @@ int main(int argc, char** argv)
 #if SAVE_DATA
     wavLoader.saveData(filename+".dat");
 #endif
-
     vector<double> filteredData;
-    bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.pWav->getSampleFrequency());
+    bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.wav.getSampleRateHz());
     DUMP("Signal is filtered.", "DEBUG");
 }
 
