@@ -30,4 +30,9 @@ int bandpass(vector<double>& data
         , const size_t samplingFrequency
         );
 
+
+#ifdef  ENABLE_UNIT_TESTS
+void test_dsp();
+#endif     /* -----  ENABLE_UNIT_TESTS  ----- */
+
 #endif   /* ----- #ifndef DSP_INC  ----- */

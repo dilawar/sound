@@ -50,7 +50,7 @@ int bandpass(
     size_t SIZE = data.size();
     double timePeriod = 1.0 / samplingFrequency;
 
-    double* arrayData, filter;
+    double* arrayData,  * filter;
     arrayData = new double[SIZE];
     filter = new double[SIZE];
 
@@ -74,14 +74,42 @@ int bandpass(
      * domain is equal to convolution in frequency domain.
      */
 
-
     /* Transform the singal back to time domain */
     hc = gsl_fft_halfcomplex_wavetable_alloc(SIZE);
     gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
     gsl_fft_halfcomplex_wavetable_free(hc);
 
+#ifdef  VERIFY
     for(int i = 0; i < 100; i++)
-        cerr << arrayData[i] << "," << data[i] << ";";
+        EXPECT_EQ(arrayData[i], data[i], "Must be same");
+#endif     /* -----  VERIFY  ----- */
 
     return EXIT_SUCCESS;
 }
+
+
+#ifdef  ENABLE_UNIT_TESTS
+
+/**
+ * @brief This function tests the dsp module.
+ */
+void test_dsp(void)
+{
+
+    /*-----------------------------------------------------------------------------
+     *  Create two sinusoids 100 Hz and 10000 Hz. Add 10000 samples sampled at
+     *  16000Hz together.
+     *-----------------------------------------------------------------------------*/
+    unsigned int sampleSize = 10000;
+    unsigned int sampleFreq = 16000;
+
+    array<double, sampleSize> signalA, signalB;
+
+    for(unsigned int i = 0; i < sampleSize; i++)
+    {
+//        signalA[i] = 
+    }
+
+}
+
+#endif     /* -----  ENABLE_UNIT_TESTS  ----- */
