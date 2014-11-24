@@ -1,3 +1,6 @@
 [submodule "external/DSPFilters"]
 	path = external/DSPFilters
 	url = git@github.com:vinniefalco/DSPFilters
+[submodule "gnuplot-iostream"]
+	path = gnuplot-iostream
+	url = git://gitorious.org/gnuplot-iostream/gnuplot-iostream.git
