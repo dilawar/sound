@@ -1,8 +1,12 @@
 #!/bin/bash
 set -e 
 #set -x
+if [[ "$1" = "e" ]]; then
+    rm -f CMakeCache.txt
+    rm -rf CMakeFiles
+fi
 cmake .
-make VERBOSE=1
+make
 datafile=./Data/mr1.220405.wav
 echo "Processing file."
 if [[ "$1" = "x" ]]; then

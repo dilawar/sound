@@ -118,7 +118,9 @@ void test_dsp(void)
     }
 
     /*  Plot this data */
-    plot<array<double, sampleSize>>(signalA, "signalA.png");
+    map<string, array<double, sampleSize>> dataMap;
+    dataMap["combined signal"] = signalA;
+    plot<array<double, sampleSize>>(dataMap, string("signalA.png"));
 
 }
 
