@@ -108,19 +108,17 @@ void test_dsp(void)
     const unsigned int freqA = 10;
     const unsigned int freqB = 2000;
 
-    array<double, sampleSize> signalA, signalB, combinedSignal;
-
+    vector<double> indexVec, signalA, signalB, combinedSignal;
     for(unsigned int i = 0; i < sampleSize; i++)
     {
-        signalA[i] = sin(PI * (freqA / sampleFreq) * i);
-	signalB[i] = sin(PI * (freqB / sampleFreq) * i);
-	combinedSignal[i] = signalA[i] + signalB[i];
+        indexVec.push_back(i);
+        signalA.push_back(sin(PI * (freqA / sampleFreq) * i));
+	signalB.push_back(sin(PI * (freqB / sampleFreq) * i));
+	combinedSignal.push_back(signalA[i] + signalB[i]);
     }
 
     /*  Plot this data */
-    map<string, array<double, sampleSize>> dataMap;
-    dataMap["combined signal"] = signalA;
-    plot<array<double, sampleSize>>(dataMap, string("signalA.png"));
+    plotXY( indexVec, signalA, false);
 
 }
 

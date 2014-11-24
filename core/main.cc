@@ -43,6 +43,12 @@ using namespace std;
 
 int main(int argc, char** argv)
 {
+
+#ifdef ENABLE_UNIT_TESTS
+    DUMP("TESTING DSP MODULE", "TEST");
+    test_dsp();
+#endif
+
     string filename = string(argv[1]);
     DUMP( "Opening file " << filename, "INFO");
 
