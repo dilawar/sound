@@ -2,7 +2,7 @@
 set -e 
 #set -x
 cmake .
-make
+make VERBOSE=1
 datafile=./Data/mr1.220405.wav
 echo "Processing file."
 if [[ "$1" = "x" ]]; then

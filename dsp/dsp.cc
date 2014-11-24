@@ -17,8 +17,6 @@
  */
 
 
-#include "dsp.h"
-#include "global.h"
 #include <vector>
 #include <array>
 #include <iostream>
@@ -28,6 +26,10 @@
 #include <gsl/gsl_fft_real.h>
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_fft_halfcomplex.h>
+
+#include "dsp.h"
+#include "global.h"
+#include "plot.h"
 
 using namespace std;
 
@@ -100,15 +102,23 @@ void test_dsp(void)
      *  Create two sinusoids 100 Hz and 10000 Hz. Add 10000 samples sampled at
      *  16000Hz together.
      *-----------------------------------------------------------------------------*/
-    unsigned int sampleSize = 10000;
-    unsigned int sampleFreq = 16000;
+    const unsigned int sampleSize = 10000;
+    const unsigned int sampleFreq = 16000;
 
-    array<double, sampleSize> signalA, signalB;
+    const unsigned int freqA = 10;
+    const unsigned int freqB = 2000;
+
+    array<double, sampleSize> signalA, signalB, combinedSignal;
 
     for(unsigned int i = 0; i < sampleSize; i++)
     {
-//        signalA[i] = 
+        signalA[i] = sin(PI * (freqA / sampleFreq) * i);
+	signalB[i] = sin(PI * (freqB / sampleFreq) * i);
+	combinedSignal[i] = signalA[i] + signalB[i];
     }
+
+    /*  Plot this data */
+    plot<array<double, sampleSize>>(signalA, "signalA.png");
 
 }
 

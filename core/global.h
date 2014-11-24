@@ -25,4 +25,6 @@
 #include "simple_logger.hpp"
 #include "testing_macros.hpp"
 
+#define PI 3.141592654
+
 #endif   /* ----- #ifndef GLOBAL_INC  ----- */
