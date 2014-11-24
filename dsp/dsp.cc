@@ -112,13 +112,17 @@ void test_dsp(void)
     for(unsigned int i = 0; i < sampleSize; i++)
     {
         indexVec.push_back(i);
-        signalA.push_back(sin(PI * (freqA / sampleFreq) * i));
-	signalB.push_back(sin(PI * (freqB / sampleFreq) * i));
+        signalA.push_back(sin(PI * (freqA / (double)sampleFreq) * i));
+	signalB.push_back(sin(PI * (freqB / (double)sampleFreq) * i));
 	combinedSignal.push_back(signalA[i] + signalB[i]);
     }
 
+    map<string, vector<double>> mapData;
+    mapData["signal A"] = signalA;
+    mapData["signal B"] = signalB;
+
     /*  Plot this data */
-    plotXY( indexVec, signalA, false);
+    plotXY( indexVec, mapData, "signalA.csv");
 
 }
 

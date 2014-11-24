@@ -19,25 +19,33 @@
 #ifndef  PLOT_INC
 #define  PLOT_INC
 
-#include "gnuplot-iostream.h"
-#include <boost/tuple/tuple.hpp>
 #include <map>
+#include <vector>
+#include <fstream>
+#include <iostream>
 
-template<typename T>
-void plot(map<string, T>& dataMap, string filename = "")
+void plotXY(vector<double>& xData, map<string, vector<double>>& mapData
+        , string filename = ""
+        )
 {
-    DUMP("Plotting to " << filename, "DEBUG");
-    Gnuplot gp;
+    stringstream plotSS;
+    unsigned columnNos = mapData.size();
+    vector<string> columnNames;
 
-}
+    for(auto it : mapData) columnNames.push_back(it->first);
 
-void plotXY(vector<double> xData, vector<double> yData, bool plotToFile = false)
-{
-    DUMP("Plotting using gnuplot", "DEBUG");
-    Gnuplot gp;
+    for(size_t i = 0; i < xData.size(); i++)
+        plotSS << xData[i] << "," << yData[i] << endl;
 
-    gp << "set xrange [-2:2]\nset yrange [-2:2]\n";
-    gp << "plot '-' with lines" << endl;
-    gp.send1d(boost::make_tuple(xData, yData));
+    if(filename.size() == 0)
+        cout << plotSS.str();
+    else
+    {
+        ofstream outF;
+        outF.open(filename);
+        outF << plotSS.str();
+        outF.close();
+    }
+    DUMP("Done writing data to " << filename, "INFO");
 }
 #endif   /* ----- #ifndef PLOT_INC  ----- */
