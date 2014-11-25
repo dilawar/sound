@@ -23,6 +23,7 @@
 #include <vector>
 #include <fstream>
 #include <iostream>
+#include <boost/algorithm/string/join.hpp>
 
 void plotXY(vector<double>& xData, map<string, vector<double>>& mapData
         , string filename = ""
@@ -30,12 +31,13 @@ void plotXY(vector<double>& xData, map<string, vector<double>>& mapData
 {
     stringstream plotSS;
     unsigned columnNos = mapData.size();
-    vector<string> columnNames;
 
-    for(auto it : mapData) columnNames.push_back(it->first);
-
-    for(size_t i = 0; i < xData.size(); i++)
-        plotSS << xData[i] << "," << yData[i] << endl;
+    for(auto &it : mapData)
+    {
+        plotSS << it.first << ",";
+        for(auto val : it.second) plotSS << val << ",";
+        plotSS << endl;
+    }
 
     if(filename.size() == 0)
         cout << plotSS.str();
