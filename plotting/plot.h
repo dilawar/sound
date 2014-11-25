@@ -25,9 +25,7 @@
 #include <iostream>
 #include <boost/algorithm/string/join.hpp>
 
-void plotXY(vector<double>& xData, map<string, vector<double>>& mapData
-        , string filename = ""
-        )
+void plotXY(map<string, vector<double>>& mapData , string filename = "")
 {
     stringstream plotSS;
     unsigned columnNos = mapData.size();
@@ -47,7 +45,7 @@ void plotXY(vector<double>& xData, map<string, vector<double>>& mapData
         outF.open(filename);
         outF << plotSS.str();
         outF.close();
+        DUMP("Done writing data to " << filename, "INFO");
     }
-    DUMP("Done writing data to " << filename, "INFO");
 }
 #endif   /* ----- #ifndef PLOT_INC  ----- */

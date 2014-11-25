@@ -105,7 +105,7 @@ void test_dsp(void)
     const unsigned int sampleSize = 10000;
     const unsigned int sampleFreq = 16000;
 
-    const unsigned int freqA = 10;
+    const unsigned int freqA = 100;
     const unsigned int freqB = 2000;
 
     vector<double> indexVec, signalA, signalB, combinedSignal;
@@ -118,12 +118,16 @@ void test_dsp(void)
     }
 
     map<string, vector<double>> mapData;
-    mapData["signal A"] = signalA;
-    mapData["signal B"] = signalB;
+//    mapData["signal A"] = signalA;
+//    mapData["signal B"] = signalB;
+    mapData["before filtering"] = combinedSignal;
+    plotXY( mapData, "before_filter.dat");
 
-    /*  Plot this data */
-    plotXY( indexVec, mapData, "signalA.csv");
-
+    /* Create a filter with filtering frequency at 1000 */
+    vector<double> outData;
+    bandpass(combinedSignal, outData, 10, 1000, sampleFreq);
+    mapData["filtered"] = outData;
+    plotXY(mapData, "after_filtering.dat");
 }
 
 #endif     /* -----  ENABLE_UNIT_TESTS  ----- */

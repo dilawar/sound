@@ -38,6 +38,8 @@
 #include "WavLoader.h"
 #include "dsp.h"
 #include "global.h"
+#include <stdexcept>
+#include <boost/program_options.hpp>
 
 using namespace std;
 
@@ -49,7 +51,39 @@ int main(int argc, char** argv)
     test_dsp();
 #endif
 
-    string filename = string(argv[1]);
+    /*
+     * This snippet is from here 
+     *   
+     */
+    boost::program_options::options_description d("Allowed options for songbird");
+    d.add_options()
+        ("help", "Produce this help message")
+        ("input", boost::program_options::value<std::string>(), "load from data file")
+        ;
+
+    boost::program_options::variables_map m;
+    boost::program_options::store(boost::program_options::parse_command_line(
+                argc, argv, d), m
+            );
+    boost::program_options::notify(m);
+
+    if(m.count("help"))
+        cout << d << endl;
+
+    string filename;
+    if(m.count("input"))
+    {
+        DUMP( "Input filename is set to " << m["input"].as<string>() << endl
+                , "DEBUG"
+            );
+        filename = m["input"].as<string>();
+    }
+    else
+    {
+        cout << d << endl;
+        return EXIT_SUCCESS;
+    }
+
     DUMP( "Opening file " << filename, "INFO");
 
     WavLoader wavLoader = WavLoader(filename);

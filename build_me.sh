@@ -10,8 +10,16 @@ make
 datafile=./Data/mr1.220405.wav
 echo "Processing file."
 if [[ "$1" = "x" ]]; then
-    gdb --args ./songbird $datafile
+    gdb --args ./songbird --input $datafile
 else
-    ./songbird $datafile
+    ./songbird --input $datafile
 fi
 
+if [[ "$2" = "plot" ]]; then
+    echo "Plotting data"
+    ( 
+    cd data 
+    ../scripts/plot.py --file before_filter.data --length 1000 --outfile b_filter.png
+    ../scripts/plot.py --file after_filter.data -l 1000 -o a_filter.png 
+    )
+fi

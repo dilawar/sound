@@ -11,6 +11,7 @@ ADD_DEFINITIONS(-DENABLE_UNIT_TESTS)
 SET(Boost_USE_STATIC_LIBS ON)
 FIND_PACKAGE(Boost REQUIRED COMPONENTS  iostreams  system unit_test_framework
     filesystem
+    program_options
     )
 MESSAGE("++ Include dirs : ${Boost_INCLUDE_DIRS}")
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
@@ -56,3 +57,4 @@ TARGET_LINK_LIBRARIES(songbird
     ${Boost_LIBRARIES}
     )
 
+enable_testing()

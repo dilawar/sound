@@ -34,6 +34,7 @@ def plotRow(args):
     if not filename:
         pylab.show()
     else:
+        print("INFO: Saving plot to %s " % filename)
         pylab.savefig(filename)
 
 
