@@ -52,9 +52,10 @@ int bandpass(
     size_t SIZE = data.size();
     double timePeriod = 1.0 / samplingFrequency;
 
-    double* arrayData,  * filter;
+    double* arrayData,  * filter, * convolvedSig;
     arrayData = new double[SIZE];
     filter = new double[SIZE];
+    convolvedSig = new double[SIZE];
 
     unsigned int i = 0;
     for(auto it = data.begin(); it != data.end(); it++)
@@ -75,16 +76,30 @@ int bandpass(
     /* Multiply the fft of signal with filter. This multiplication in frequency
      * domain is equal to convolution in frequency domain.
      */
+    unsigned int n1 = (unsigned int) ((double)cutoffA / samplingFrequency * SIZE);
+    unsigned int n2 = (unsigned int) ((double)cutoffB / samplingFrequency * SIZE);
+
+    for(size_t i = 0; i < SIZE; i++)
+    {
+        if( i >= n1 && i <= n2)
+            filter[i] = 1.0;
+        else
+            filter[i] = 0.0;
+    }
+
+    /* Here multiply in frequency domain */
+    for(size_t i = 0; i < SIZE; i++)
+        convolvedSig[i] = filter[i] * arrayData[i];
 
     /* Transform the singal back to time domain */
     hc = gsl_fft_halfcomplex_wavetable_alloc(SIZE);
-    gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
+    gsl_fft_halfcomplex_inverse(convolvedSig, 1, SIZE, hc, work);
     gsl_fft_halfcomplex_wavetable_free(hc);
 
-#ifdef  VERIFY
-    for(int i = 0; i < 100; i++)
-        EXPECT_EQ(arrayData[i], data[i], "Must be same");
-#endif     /* -----  VERIFY  ----- */
+    for(size_t i = 0; i < SIZE; i++)
+        outData.push_back(convolvedSig[i]);
+
+    gsl_fft_real_workspace_free(work);
 
     return EXIT_SUCCESS;
 }
@@ -120,14 +135,15 @@ void test_dsp(void)
     map<string, vector<double>> mapData;
 //    mapData["signal A"] = signalA;
 //    mapData["signal B"] = signalB;
-    mapData["before filtering"] = combinedSignal;
-    plotXY( mapData, "before_filter.dat");
+//    mapData["before_filter"] = combinedSignal;
+//    plotXY( mapData, "data/before_filter.dat");
 
     /* Create a filter with filtering frequency at 1000 */
     vector<double> outData;
-    bandpass(combinedSignal, outData, 10, 1000, sampleFreq);
+    bandpass(combinedSignal, outData, 200, 10000, sampleFreq);
+    mapData["before filter"] = combinedSignal;
     mapData["filtered"] = outData;
-    plotXY(mapData, "after_filtering.dat");
+    plotXY(mapData, "data/after_filter.dat");
 }
 
 #endif     /* -----  ENABLE_UNIT_TESTS  ----- */

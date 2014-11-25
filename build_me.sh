@@ -15,11 +15,11 @@ else
     ./songbird --input $datafile
 fi
 
-if [[ "$2" = "plot" ]]; then
+if [[ "$1" = "plot" ]]; then
     echo "Plotting data"
     ( 
     cd data 
-    ../scripts/plot.py --file before_filter.data --length 1000 --outfile b_filter.png
-    ../scripts/plot.py --file after_filter.data -l 1000 -o a_filter.png 
+    ../scripts/plot.py --file before_filter.dat --length 1000 --outfile b_filter.png
+    ../scripts/plot.py --file after_filter.dat -l 1000 -o a_filter.png 
     )
 fi
