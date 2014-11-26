@@ -5,6 +5,7 @@ from scipy import signal
 import pylab
 
 samplingFreq = 0
+windowSize = 4096
 
 def readAifData(file):
     global samplingFreq
@@ -18,17 +19,27 @@ def readAifData(file):
     return data
 
 def filterData(data):
-    b, a = signal.butter(4, [100.0/samplingFreq, 12000.0/samplingFreq], 'bandpass')
+    b, a = signal.butter(4, 15000/samplingFreq, 'highpass')
     ft = signal.lfilter(b, a, data)
-    pylab.plot(data)
-    pylab.plot(ft)
+    return ft
+
+def spectogram(data, **kwargs):
+    print("INFO: Computing spectogram: samplingFreq %s " % samplingFreq)
+    Pxx, freqs, bins, im = pylab.specgram(
+            data, windowSize, samplingFreq
+            , window = pylab.window_hanning
+            )
+
     pylab.show()
+
+
     
 
 def main():
     file = sys.argv[1]
     data = readAifData(file)
-    filterData(data)
+    data = filterData(data)
+    spectogram(data)
 
 if __name__ == '__main__':
     main()
