@@ -24,7 +24,11 @@
 #include "simple_test.hpp"
 #include "simple_logger.hpp"
 #include "testing_macros.hpp"
+#include <boost/program_options.hpp>
 
 #define PI 3.141592654
+
+
+extern boost::program_options::variables_map m;
 
 #endif   /* ----- #ifndef GLOBAL_INC  ----- */

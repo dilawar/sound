@@ -38,6 +38,7 @@ INCLUDE_DIRECTORIES(dsp aiff wave simpletest)
 
 INCLUDE_DIRECTORIES(plotting)
 
+ADD_SUBDIRECTORY(core)
 ADD_SUBDIRECTORY(aiff)
 ADD_SUBDIRECTORY(wave)
 ADD_SUBDIRECTORY(dsp)
@@ -51,6 +52,7 @@ MESSAGE("++ LINKING AGAINGS ${Boost_LIBRARIES}")
 
 TARGET_LINK_LIBRARIES(songbird
     aiff
+    core
     wave
     asound
     dsp

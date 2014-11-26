@@ -39,7 +39,6 @@
 #include "dsp.h"
 #include "global.h"
 #include <stdexcept>
-#include <boost/program_options.hpp>
 
 using namespace std;
 
@@ -51,17 +50,17 @@ int main(int argc, char** argv)
     test_dsp();
 #endif
 
+    boost::program_options::options_description d("Allowd options for songbird");
     /*
      * This snippet is from here 
      *   
      */
-    boost::program_options::options_description d("Allowed options for songbird");
     d.add_options()
         ("help", "Produce this help message")
         ("input", boost::program_options::value<std::string>(), "load from data file")
         ;
 
-    boost::program_options::variables_map m;
+//    boost::program_options::variables_map m;
     boost::program_options::store(boost::program_options::parse_command_line(
                 argc, argv, d), m
             );

@@ -3,7 +3,7 @@
  *
  *       Filename:  global.c
  *
- *    Description:  
+ *    Description:  Global variables.
  *
  *        Version:  1.0
  *        Created:  11/26/2014 12:31:35 PM
@@ -15,5 +15,8 @@
  *
  * ==============================================================================
  */
-#include <stdlib.h>
 
+
+#include <boost/program_options.hpp>
+
+boost::program_options::variables_map m;
