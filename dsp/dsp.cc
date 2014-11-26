@@ -34,91 +34,6 @@
 using namespace std;
 
 /**
- * @brief Compute the INVERSE Fourier Transform of a signal.
- *
- * @tparam T
- * @param data Input data.
- * @param result Result.
- *
- * @return Exit status.
- */
-template<typename T>
-int IFFT(T& data, T& result)
-{
-    gsl_fft_real_workspace * work;
-    gsl_fft_halfcomplex_wavetable * hc;
-
-    const size_t SIZE = data.size();
-    ASSERT_EQ(SIZE, result.size(), "The result container must be initialized to "
-            " same size as of input data" 
-            );
-
-    double* arrayData = new double[SIZE];
-
-    hc = gsl_fft_halfcomplex_wavetable_alloc(SIZE);
-    gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
-
-    for(size_t i = 0; i < SIZE; i++)
-        result[i] = arrayData[i];
-
-    gsl_fft_halfcomplex_wavetable_free(hc);
-    gsl_fft_real_workspace_free(work);
-}
-
-
-/**
- * @brief A bandpass filter to remove the noise.
- * 
- * @param  Vector of data.
- * @param  Cutoff A.
- * @param  Cutoff B.
- * @param  Sampling frequency.
- */
-int bandpass(
-        vector<double>& data
-        , vector<double>& outData
-        , unsigned int cutoffA
-        , unsigned int cutoffB
-        , const size_t samplingFrequency
-        )
-{
-    const int SIZE = data.size();
-
-    outData.resize(SIZE);
-
-    double timePeriod = 1.0 / samplingFrequency;
-
-    double *filter, *convolvedSig; 
-    filter = new double[SIZE];
-    convolvedSig = new double[SIZE];
-
-    vector<double> fftOfData(SIZE);
-    FFT<vector<double>>(data, fftOfData);
-
-    /* Multiply the fft of signal with filter. This multiplication in frequency
-     * domain is equal to convolution in frequency domain.
-     */
-    unsigned int n1 = (unsigned int) ((double)cutoffA / samplingFrequency * SIZE);
-    unsigned int n2 = (unsigned int) ((double)cutoffB / samplingFrequency * SIZE);
-
-    for(size_t i = 0; i < SIZE; i++)
-    {
-        if( i >= n1 && i <= n2)
-            filter[i] = 1.0;
-        else
-            filter[i] = 0.0;
-    }
-
-    /* Here multiply in frequency domain */
-    for(size_t i = 0; i < SIZE; i++)
-        fftOfData[i] = filter[i] * fftOfData[i];
-
-    IFFT<vector<double>>(fftOfData, outData);
-    return EXIT_SUCCESS;
-}
-
-
-/**
  * @brief Calculate the FFT of input signal and store the result in second arg.
  *
  * @tparam T
@@ -128,7 +43,7 @@ int bandpass(
  * @return 
  */
 template<typename T>
-int FFT(T& data, T& result)
+int FFT(const T& data, T& result)
 {
     const size_t SIZE = data.size();
 
@@ -163,6 +78,95 @@ int FFT(T& data, T& result)
 
     delete[] arrayData;
 }
+
+/**
+ * @brief Compute the INVERSE Fourier Transform of a signal.
+ *
+ * @tparam T
+ * @param data Input data.
+ * @param result Result.
+ *
+ * @return Exit status.
+ */
+template<typename T>
+int IFFT(const T& data, T& result)
+{
+    gsl_fft_real_workspace * work;
+    gsl_fft_halfcomplex_wavetable * hc;
+
+    const size_t SIZE = data.size();
+    ASSERT_EQ(SIZE, result.size(), "The result container must be initialized to "
+            " same size as of input data" 
+            );
+
+
+    work = gsl_fft_real_workspace_alloc(SIZE);
+    hc =  gsl_fft_halfcomplex_wavetable_alloc(SIZE);
+
+    double* arrayData = new double[SIZE];
+    for (int i = 0; i < SIZE; i++)
+        arrayData[i] = data[i];
+
+    gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
+
+    for(size_t i = 0; i < SIZE; i++)
+        result[i] = arrayData[i];
+
+    gsl_fft_halfcomplex_wavetable_free(hc);
+    gsl_fft_real_workspace_free(work);
+}
+
+
+/**
+ * @brief A bandpass filter to remove the noise.
+ * 
+ * @param  Vector of data.
+ * @param  Cutoff A.
+ * @param  Cutoff B.
+ * @param  Sampling frequency.
+ */
+int bandpass(
+        vector<double>& data
+        , vector<double>& outData
+        , unsigned int cutoffA
+        , unsigned int cutoffB
+        , const size_t samplingFrequency
+        )
+{
+    const int SIZE = data.size();
+    outData.resize(SIZE);
+
+    double timePeriod = 1.0 / samplingFrequency;
+
+    double *filter, *convolvedSig; 
+    filter = new double[SIZE];
+    convolvedSig = new double[SIZE];
+
+    vector<double> fftOfData(SIZE);
+    FFT<vector<double>>(data, fftOfData);
+
+    /* Multiply the fft of signal with filter. This multiplication in frequency
+     * domain is equal to convolution in frequency domain.
+     */
+    unsigned int n1 = (unsigned int) ((double)cutoffA / samplingFrequency * SIZE);
+    unsigned int n2 = (unsigned int) ((double)cutoffB / samplingFrequency * SIZE);
+
+    for(size_t i = 0; i < SIZE; i++)
+    {
+        if( i >= n1 && i <= n2)
+            filter[i] = 1.0;
+        else
+            filter[i] = 0.0;
+    }
+
+    /* Here multiply in frequency domain */
+    for(size_t i = 0; i < SIZE; i++)
+        fftOfData[i] = filter[i] * fftOfData[i];
+
+    IFFT<vector<double>>(fftOfData, outData);
+    return EXIT_SUCCESS;
+}
+
 #ifdef  ENABLE_UNIT_TESTS
 
 /**

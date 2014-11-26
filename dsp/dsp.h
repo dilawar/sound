@@ -24,10 +24,10 @@
 using namespace std;
 
 template<typename T>
-int FFT(T& data, T& result);
+int FFT(const T& data, T& result);
 
 template<typename T>
-int IFFT(T& data, T& result);
+int IFFT(const T& data, T& result);
 
 
 int bandpass(vector<double>& data
