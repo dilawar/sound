@@ -23,13 +23,19 @@
 
 using namespace std;
 
+template<typename T>
+int FFT(T& data, T& result);
+
+template<typename T>
+int IFFT(T& data, T& result);
+
+
 int bandpass(vector<double>& data
         , vector<double>& outData
         , unsigned int cutoffA
         , unsigned int cutoffB
         , const size_t samplingFrequency
         );
-
 
 #ifdef  ENABLE_UNIT_TESTS
 void test_dsp();

@@ -34,6 +34,39 @@
 using namespace std;
 
 /**
+ * @brief Compute the INVERSE Fourier Transform of a signal.
+ *
+ * @tparam T
+ * @param data Input data.
+ * @param result Result.
+ *
+ * @return Exit status.
+ */
+template<typename T>
+int IFFT(T& data, T& result)
+{
+    gsl_fft_real_workspace * work;
+    gsl_fft_halfcomplex_wavetable * hc;
+
+    const size_t SIZE = data.size();
+    ASSERT_EQ(SIZE, result.size(), "The result container must be initialized to "
+            " same size as of input data" 
+            );
+
+    double* arrayData = new double[SIZE];
+
+    hc = gsl_fft_halfcomplex_wavetable_alloc(SIZE);
+    gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
+
+    for(size_t i = 0; i < SIZE; i++)
+        result[i] = arrayData[i];
+
+    gsl_fft_halfcomplex_wavetable_free(hc);
+    gsl_fft_real_workspace_free(work);
+}
+
+
+/**
  * @brief A bandpass filter to remove the noise.
  * 
  * @param  Vector of data.
@@ -49,29 +82,18 @@ int bandpass(
         , const size_t samplingFrequency
         )
 {
-    size_t SIZE = data.size();
+    const int SIZE = data.size();
+
+    outData.resize(SIZE);
+
     double timePeriod = 1.0 / samplingFrequency;
 
-    double* arrayData,  * filter, * convolvedSig;
-    arrayData = new double[SIZE];
+    double *filter, *convolvedSig; 
     filter = new double[SIZE];
     convolvedSig = new double[SIZE];
 
-    unsigned int i = 0;
-    for(auto it = data.begin(); it != data.end(); it++)
-    {
-        arrayData[i] = *it;
-        i++;
-    }
-
-    /* Compute FFT here */
-    gsl_fft_real_wavetable* real;
-    gsl_fft_halfcomplex_wavetable * hc;
-    gsl_fft_real_workspace * work;
-
-    work = gsl_fft_real_workspace_alloc(SIZE);
-    real = gsl_fft_real_wavetable_alloc(SIZE);
-    gsl_fft_real_transform(arrayData, 1, SIZE , real, work);
+    vector<double> fftOfData(SIZE);
+    FFT<vector<double>>(data, fftOfData);
 
     /* Multiply the fft of signal with filter. This multiplication in frequency
      * domain is equal to convolution in frequency domain.
@@ -89,22 +111,58 @@ int bandpass(
 
     /* Here multiply in frequency domain */
     for(size_t i = 0; i < SIZE; i++)
-        convolvedSig[i] = filter[i] * arrayData[i];
+        fftOfData[i] = filter[i] * fftOfData[i];
 
-    /* Transform the singal back to time domain */
-    hc = gsl_fft_halfcomplex_wavetable_alloc(SIZE);
-    gsl_fft_halfcomplex_inverse(convolvedSig, 1, SIZE, hc, work);
-    gsl_fft_halfcomplex_wavetable_free(hc);
-
-    for(size_t i = 0; i < SIZE; i++)
-        outData.push_back(convolvedSig[i]);
-
-    gsl_fft_real_workspace_free(work);
-
+    IFFT<vector<double>>(fftOfData, outData);
     return EXIT_SUCCESS;
 }
 
 
+/**
+ * @brief Calculate the FFT of input signal and store the result in second arg.
+ *
+ * @tparam T
+ * @param data
+ * @param outData
+ *
+ * @return 
+ */
+template<typename T>
+int FFT(T& data, T& result)
+{
+    const size_t SIZE = data.size();
+
+    ASSERT_EQ(result.size(), SIZE
+            , "The out-data container must be initialized to the same size as "
+            " input data "
+            );
+
+    double* arrayData;
+    arrayData = new double[SIZE];
+
+    unsigned i;
+    for (i = 0; i < SIZE; i++)
+        arrayData[i] = data[i];
+
+    /* Compute FFT here */
+    gsl_fft_real_wavetable* real;
+    gsl_fft_halfcomplex_wavetable * hc;
+    gsl_fft_real_workspace * work;
+
+    real = gsl_fft_real_wavetable_alloc(SIZE);
+    work = gsl_fft_real_workspace_alloc(SIZE);
+    hc =  gsl_fft_halfcomplex_wavetable_alloc(SIZE);
+
+    gsl_fft_real_transform(arrayData, 1, SIZE , real, work);
+
+    for (i = 0; i < SIZE; i++) 
+        result[i] = arrayData[i];
+
+    gsl_fft_halfcomplex_wavetable_free(hc);
+    gsl_fft_real_workspace_free(work);
+
+    delete[] arrayData;
+}
 #ifdef  ENABLE_UNIT_TESTS
 
 /**
@@ -133,6 +191,7 @@ void test_dsp(void)
     }
 
     map<string, vector<double>> mapData;
+
 //    mapData["signal A"] = signalA;
 //    mapData["signal B"] = signalB;
 //    mapData["before_filter"] = combinedSignal;
@@ -140,7 +199,7 @@ void test_dsp(void)
 
     /* Create a filter with filtering frequency at 1000 */
     vector<double> outData;
-    bandpass(combinedSignal, outData, 200, 10000, sampleFreq);
+    bandpass(combinedSignal, outData, 200, 1800, sampleFreq);
     mapData["before filter"] = combinedSignal;
     mapData["filtered"] = outData;
     plotXY(mapData, "data/after_filter.dat");

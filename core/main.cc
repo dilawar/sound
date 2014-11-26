@@ -40,6 +40,10 @@
 #include "global.h"
 #include <stdexcept>
 
+
+#include <boost/program_options.hpp>
+#include <boost/program_options/parsers.hpp>
+
 using namespace std;
 
 int main(int argc, char** argv)
@@ -50,48 +54,75 @@ int main(int argc, char** argv)
     test_dsp();
 #endif
 
-    boost::program_options::options_description d("Allowd options for songbird");
+    namespace po = boost::program_options;
+
+
     /*
-     * This snippet is from here 
-     *   
+     * Options allowed on command line.
      */
-    d.add_options()
+    po::options_description generic("Allowd options for songbird");
+    generic.add_options()
         ("help", "Produce this help message")
-        ("input", boost::program_options::value<std::string>(), "load from data file")
+        ("input", po::value<std::string>(), "load from data file")
+        ;
+    po::store(po::parse_command_line(argc, argv, generic), prgOptions);
+
+    ifstream ifs(CONFIG_FILE);
+
+    po::options_description config("Options in configuration file.");
+    unsigned int cutoff_low, cutoff_high;
+    config.add_options()
+        ("filter.cutoff_low"
+            , po::value<unsigned int>(&cutoff_low)
+            , "Low cutoff frequency"
+            )
+        ("filter.cutoff_high"
+            , po::value<unsigned int>(&cutoff_high)
+            , "High cufoff frequency"
+            )
         ;
 
-//    boost::program_options::variables_map m;
-    boost::program_options::store(boost::program_options::parse_command_line(
-                argc, argv, d), m
-            );
-    boost::program_options::notify(m);
-
-    if(m.count("help"))
-        cout << d << endl;
-
-    string filename;
-    if(m.count("input"))
+    if(!ifs)
     {
-        DUMP( "Input filename is set to " << m["input"].as<string>() << endl
-                , "DEBUG"
-            );
-        filename = m["input"].as<string>();
+        DUMP("No configuration file " << CONFIG_FILE << "found.", "WARN");
+        throw runtime_error("Configuration file missing");
     }
     else
     {
-        cout << d << endl;
+        po::store(po::parse_config_file(ifs, config), prgOptions);
+        ifs.close();
+    }
+
+
+    po::notify(prgOptions);
+
+    if(prgOptions.count("help"))
+        cout << generic << endl;
+
+    string filename;
+    if(prgOptions.count("input"))
+    {
+        DUMP( "Input filename is set to " << prgOptions["input"].as<string>() << endl
+                , "DEBUG"
+            );
+        filename = prgOptions["input"].as<string>();
+    }
+    else
+    {
+        cout << generic << endl;
         return EXIT_SUCCESS;
     }
 
     DUMP( "Opening file " << filename, "INFO");
-
     WavLoader wavLoader = WavLoader(filename);
 
-#if SAVE_DATA
-    wavLoader.saveData(filename+".dat");
-#endif
-    vector<double> filteredData;
-    bandpass(wavLoader._data, filteredData, 1500, 10300, wavLoader.wav.getSampleRateHz());
+    vector<double> filteredData(wavLoader._data.size());
+    bandpass(wavLoader._data
+            , filteredData
+            , prgOptions["filter.cutoff_low"].as<unsigned int>()
+            , prgOptions["filter.cutoff_high"].as<unsigned int>()
+            , wavLoader.wav.getSampleRateHz()
+            );
     DUMP("Signal is filtered.", "DEBUG");
 }
 

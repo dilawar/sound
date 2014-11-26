@@ -19,4 +19,4 @@
 
 #include <boost/program_options.hpp>
 
-boost::program_options::variables_map m;
+boost::program_options::variables_map prgOptions;

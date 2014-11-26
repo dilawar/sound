@@ -27,8 +27,9 @@
 #include <boost/program_options.hpp>
 
 #define PI 3.141592654
+#define CONFIG_FILE "songbird.conf"
 
 
-extern boost::program_options::variables_map m;
+extern boost::program_options::variables_map prgOptions;
 
 #endif   /* ----- #ifndef GLOBAL_INC  ----- */

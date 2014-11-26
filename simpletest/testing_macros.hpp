@@ -148,7 +148,7 @@ static ostringstream assertStream;
         assertStream.str(""); \
         LOCATION(assertStream) \
         assertStream << "Expected " << a << ", received " << b  << endl; \
-        assertStream << token << endl; \
+        assertStream << msg << endl; \
         throw FatalTestFailure( assertStream.str() ); \
     }
 
