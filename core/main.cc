@@ -52,6 +52,7 @@ int main(int argc, char** argv)
 #ifdef ENABLE_UNIT_TESTS
     DUMP("TESTING DSP MODULE", "TEST");
     test_dsp();
+    return 0;
 #endif
 
     namespace po = boost::program_options;

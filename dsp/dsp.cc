@@ -66,14 +66,12 @@ int FFT(const T& data, T& result)
 
     real = gsl_fft_real_wavetable_alloc(SIZE);
     work = gsl_fft_real_workspace_alloc(SIZE);
-    hc =  gsl_fft_halfcomplex_wavetable_alloc(SIZE);
 
     gsl_fft_real_transform(arrayData, 1, SIZE , real, work);
 
     for (i = 0; i < SIZE; i++) 
         result[i] = arrayData[i];
 
-    gsl_fft_halfcomplex_wavetable_free(hc);
     gsl_fft_real_workspace_free(work);
 
     delete[] arrayData;
@@ -110,7 +108,9 @@ int IFFT(const T& data, T& result)
     gsl_fft_halfcomplex_inverse(arrayData, 1, SIZE, hc, work);
 
     for(size_t i = 0; i < SIZE; i++)
+    {
         result[i] = arrayData[i];
+    }
 
     gsl_fft_halfcomplex_wavetable_free(hc);
     gsl_fft_real_workspace_free(work);
@@ -179,34 +179,47 @@ void test_dsp(void)
      *  Create two sinusoids 100 Hz and 10000 Hz. Add 10000 samples sampled at
      *  16000Hz together.
      *-----------------------------------------------------------------------------*/
-    const unsigned int sampleSize = 10000;
-    const unsigned int sampleFreq = 16000;
+    const unsigned int sampleSize = 500;
 
-    const unsigned int freqA = 100;
-    const unsigned int freqB = 2000;
+    const double freqA = 20.0;
+    const double freqB = 1000.0;
 
-    vector<double> indexVec, signalA, signalB, combinedSignal;
+    const double sampleFreq = 4000.0;
+
+    vector<double> timeVec, freqVec, signalA, signalB, combinedSignal;
     for(unsigned int i = 0; i < sampleSize; i++)
     {
-        indexVec.push_back(i);
-        signalA.push_back(sin(PI * (freqA / (double)sampleFreq) * i));
-	signalB.push_back(sin(PI * (freqB / (double)sampleFreq) * i));
+        timeVec.push_back(i / sampleFreq);
+        freqVec.push_back(i * sampleFreq / sampleSize);
+        signalA.push_back(sin(2 * PI * (freqA / sampleFreq) * i));
+	signalB.push_back(sin(2 * PI * (freqB / sampleFreq) * i));
 	combinedSignal.push_back(signalA[i] + signalB[i]);
     }
 
     map<string, vector<double>> mapData;
 
-//    mapData["signal A"] = signalA;
-//    mapData["signal B"] = signalB;
-//    mapData["before_filter"] = combinedSignal;
-//    plotXY( mapData, "data/before_filter.dat");
-
     /* Create a filter with filtering frequency at 1000 */
     vector<double> outData;
-    bandpass(combinedSignal, outData, 200, 1800, sampleFreq);
+
+    /* let's see the FFT of input signal here. */
+    vector<double> fftOfSignalA = vector<double>(sampleSize);
+    vector<double> fftOfSignalB = vector<double>(sampleSize);
+    vector<double> fftOfCombinedSig = vector<double>(sampleSize);
+
+    FFT(signalA, fftOfSignalA);
+    FFT(signalB, fftOfSignalB);
+    FFT(combinedSignal, fftOfCombinedSig);
+
+    mapData["fftA"] = fftOfSignalA;
+    mapData["fftB"] = fftOfSignalB;
+    plotXY(freqVec, mapData, "data/fft_Of_combined.dat");
+
+    bandpass(combinedSignal, outData, 500, 2800, sampleFreq);
+
+    mapData.clear();
     mapData["before filter"] = combinedSignal;
     mapData["filtered"] = outData;
-    plotXY(mapData, "data/after_filter.dat");
+    plotXY(timeVec, mapData, "data/after_filter.dat");
 }
 
 #endif     /* -----  ENABLE_UNIT_TESTS  ----- */

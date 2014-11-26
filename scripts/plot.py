@@ -20,17 +20,22 @@ def plot(data):
     pylab.show()
 
 def plotRow(args):
-    data = [[]]
+    data = []
     filename = args.outfile
     length = args.length
-    for line in args.file:
+    txt = filter(None, args.file.read().split("\n"))
+    indexVec = txt[0].split(",")[1:-1]
+    if length <= 0:
+        length = len(indexVec) - 1
+
+    indexRow = [ float(x) for x in indexVec[:length] ]
+    
+    for line in txt[1:]:
         row = line.split(',')[1:-1]
-        if length <= 0:
-            length = len(row) - 1
         data.append([float(x) for x in row[:length]])
 
     for d in data:
-        pylab.plot(range(len(d)), d)
+        pylab.plot(indexRow, d)
     if not filename:
         pylab.show()
     else:

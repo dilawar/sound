@@ -25,10 +25,15 @@
 #include <iostream>
 #include <boost/algorithm/string/join.hpp>
 
-void plotXY(map<string, vector<double>>& mapData , string filename = "")
+void plotXY(vector<double>& indexVec, map<string, vector<double>>& mapData , string filename = "")
 {
     stringstream plotSS;
     unsigned columnNos = mapData.size();
+
+    plotSS << "index,";
+    for(auto v : indexVec) 
+        plotSS << v << ",";
+    plotSS << endl;
 
     for(auto &it : mapData)
     {

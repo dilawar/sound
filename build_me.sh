@@ -19,7 +19,9 @@ if [[ "$1" = "plot" ]]; then
     echo "Plotting data"
     ( 
     cd data 
-    ../scripts/plot.py --file before_filter.dat --length 1000 --outfile b_filter.png
-    ../scripts/plot.py --file after_filter.dat -l 1000 -o a_filter.png 
+    files=`find . -type f -name "*.dat"`
+    for file in $files; do
+        ../scripts/plot.py --file $file --outfile $file.png
+    done
     )
 fi
