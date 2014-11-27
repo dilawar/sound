@@ -2,7 +2,7 @@
 
     Process the data in birdsong.
 
-Last modified: Sat Jan 18, 2014  05:01PM
+Last modified: Fri Nov 28, 2014  12:10AM
 
 """
     
@@ -15,11 +15,47 @@ __maintainer__       = "Dilawar Singh"
 __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
-from global import *
+import globals as g
+import logging
+import dsp 
+import cv2
+import numpy as np
+import pylab
 
-class BirdSong:
+class BirdSong():
 
     def __init__(self, data):
         self.data = data
+        self.imageMat = None
+        self.frequencies = None
+        self.image = None
+        self.imageH = None
+        self.filename = "spectogram.png"
 
+    def processData(self, **kwargs):
+        g.logger.info("STEP: Processing the speech data")
+        length = kwargs.get("sample_size", len(self.data) - 1 )
+        g.logger.info("Processing %s samples" % length)
+        data = self.data[:length]
+        #data = dsp.filterData(data, g.sampling_freq)
+        self.Pxx, self.frequencies, self.bins, self.imageH = dsp.spectogram(
+                data
+                , g.sampling_freq
+                , output = None #"spectogram.png"
+                )
+        self.imageMat = self.imageH.get_array()
+        self.imageH.write_png(self.filename)
+        self.getNotes()
+
+    def getNotes(self, **kwargs):
+        g.logger.info("Processing image to get notes")
+        self.image = cv2.imread(self.filename)
+        # Changes the data-type to opencv format.
+        res1 = cv2.GaussianBlur(self.image, (7,7), 0)
+        res2 = cv2.GaussianBlur(self.image, (5,13), 0)
+        edges = res1 - res2
+        pylab.imshow(edges)
+        pylab.show()
+        #pylab.imshow(res2)
+        #pylab.show()
 

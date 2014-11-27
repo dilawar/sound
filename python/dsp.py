@@ -16,20 +16,28 @@ __status__           = "Development"
 
 from scipy import signal 
 import pylab
+import globals as g
 
 def filterData(data, samplingFreq, **kwargs):
     windowSize = kwargs.get("window_size", 4300)
-    b, a = signal.butter(4, 15000/samplingFreq, 'highpass')
+    b, a = signal.butter(6, [2000/samplingFreq, 15000/samplingFreq], 'bandpass')
     ft = signal.lfilter(b, a, data)
     return ft
 
 def spectogram(data, samplingFreq,  **kwargs):
-    print("INFO: Computing spectogram: samplingFreq %s " % samplingFreq)
-    windowSize = kwargs.get("window_size", 4300)
-    Pxx, freqs, bins, im = pylab.specgram(data, windowSize, samplingFreq 
+    g.logger.info("Computing spectogram: samplingFreq %s " % samplingFreq)
+    nfft = 256
+    Pxx, freqs, bins, im = pylab.specgram(
+            data
+            , Fs = samplingFreq 
+            , NFFT = nfft
             , window = pylab.window_hanning
             )
-    pylab.show()
+    filename = kwargs.get("output", None)
+    if filename:
+        g.logger.info("Saving spectogram to %s" % filename)
+        pylab.savefig(filename)
+    return (Pxx, freqs, bins, im)
     
 
 

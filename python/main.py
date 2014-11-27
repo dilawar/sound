@@ -1,6 +1,6 @@
 """main.py: Starting point of the program.
 
-Last modified: Sat Jan 18, 2014  05:01PM
+Last modified: Thu Nov 27, 2014  10:37PM
 
 """
     
@@ -19,24 +19,26 @@ import numpy as np
 import pylab
 import birdsong
 import globals
+import logging
 
 def readAifData(file):
     global samplingFreq
-    print("INFO : Reading %s " % file)
+    globals.logger.info("Reading %s " % file)
     f = aifc.open(file, "r") 
     samplingFreq = f.getframerate()
+    globals.sampling_freq = samplingFreq
     nframes = f.getnframes()
     strData = f.readframes(nframes)
     data = np.fromstring(strData, np.short).byteswap()
     data = data[~np.isnan(data)]
+    globals.logger.debug("Reading audio file is over. Got %s samples" % len(data))
     return data
 
 def main(config):
     globals.config = config
     data = readAifData(config.get("audio", "filepath"))
-    data = filterData(data)
-    birdSong = birdsong.BirdSong(data)
-    birdsong.process()
+    bs = birdsong.BirdSong(data)
+    bs.processData(sample_size = 1e5)
 
 def configParser(file):
     try:
