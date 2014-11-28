@@ -1,0 +1,8 @@
+Fri 28 Nov 2014 04:59:50 PM IST
+
+I thought of doing edge detection using Gaussian difference and Canny. Canny
+would be cool if I know a lot about edges. They might work but not such a great
+idea.
+
+Now the algorithm is following. Pick a pixel which is guaranteed to be on the
+note and use "slither" algorithm.
