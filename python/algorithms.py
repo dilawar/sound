@@ -2,7 +2,7 @@
 
     All of my algorithms to detect pattern in image should be here.
 
-Last modified: Fri Nov 28, 2014  11:16PM
+Last modified: Sat Nov 29, 2014  12:14AM
 
 """
     
@@ -55,7 +55,7 @@ def searchForPixels(image, pixelVal, **kwargs):
     assert len(pixels) > 0, "There must be at least one pixel of value %s" % pixelVal
     return pixels
 
-def findNotes(image, **kwargs):
+def findNotes(image, threshold = None, **kwargs):
     """Find notes in the given image """
     g.logger.info("Find notes in the image")
     # 1. Find the lowest pixel (darkest one) x.
@@ -64,23 +64,24 @@ def findNotes(image, **kwargs):
     # 4. Go to step 1.
     minPixel = image.min()
     maxvalOfStartPixel = int(g.config.get('note', 'maxval_startpixel'))
+
+    if not threshold:
+        threshold = int(g.config.get('note', 'threshold'))
+
     while minPixel < maxvalOfStartPixel:
         minPixel = image.min()
-        print("Searching for pixels with value %s" % minPixel)
         startPixels = searchForPixels(image, minPixel)
-        print startPixels
         while startPixels:
             x, y = startPixels.pop()
-            g.logger.debug("Finding notes with starting point {} val {}".format(
-                (x, y), minPixel)
-                )
             if image[x, y] == minPixel:
-                note = slither(x, y, minPixel, image)
+                note = slither(x, y, minPixel, image, threshold)
                 if note:
-                    g.logger.info("Found a note")
+                    g.logger.info("Found a note: starting point {} val {}".format(
+                        (x, y), minPixel)
+                        )
                     print note
             else:
-                g.logger.debug("This pixel is already part of some note")
+                g.logger.debug("This starting pixel is already part of some note")
     pylab.imshow(image)
     pylab.show()
 
@@ -93,20 +94,24 @@ def findNotes(image, **kwargs):
 # @param image
 #
 # @return 
-def slither(startx, starty, startValue, image, threshold = 40):
+def slither(startx, starty, startValue, image, threshold):
+    assert(startValue == image.min()), "Min in image can't be smaller than startValue"
+    g.logger.info("Threshold value is %s" % threshold)
     n = note.Note(startx, starty)
     points = []
     points.append([startx, starty])
     while points:
         x, y = points.pop()
-        n.points.append([x,y])
         image[x, y] = 255
-        for a in [x-1, x, x+1]:
-            for b in [y-1, y, y+1]:
-                if (image[a, b] - startValue) < threshold:
-                    points.append([a, b])
-                    image[a, b] = 255
-                    n.points.append([a, b])
+        # Make sure we never go beyound the row - 1 and column - 1 index.
+        if x + 1 < image.shape[0] and y + 1 < image.shape[1]:
+            n.points.append([x,y])
+            for a in [x-1, x, x+1]:
+                for b in [y-1, y, y+1]:
+                    if (image[a, b] - startValue) < threshold:
+                        points.append([a, b])
+                        image[a, b] = 255
+                        n.points.append([a, b])
     if len(n.points) < 50:
         g.logger.debug("Not enough points in this note. Rejecting")
         return None

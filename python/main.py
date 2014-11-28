@@ -38,7 +38,7 @@ def main(config):
     globals.config = config
     data = readAifData(config.get("audio", "filepath"))
     bs = birdsong.BirdSong(data)
-    bs.processData(sample_size = 1e5)
+    bs.processData(sample_size = 2*1e5)
 
 def configParser(file):
     try:
