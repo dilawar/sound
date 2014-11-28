@@ -21,6 +21,7 @@ import dsp
 import cv2
 import numpy as np
 import pylab
+import algorithms
 
 class BirdSong():
 
@@ -48,14 +49,16 @@ class BirdSong():
         self.getNotes()
 
     def getNotes(self, **kwargs):
-        g.logger.info("Processing image to get notes")
-        self.image = cv2.imread(self.filename)
+        g.logger.info("Read image in GRAYSCALE mode to detect edges")
+        self.image = cv2.imread(self.filename, 0)
+        algorithms.findPointsOnTheEdges(self.image)
+        
         # Changes the data-type to opencv format.
-        res1 = cv2.GaussianBlur(self.image, (7,7), 0)
-        res2 = cv2.GaussianBlur(self.image, (5,13), 0)
-        edges = res1 - res2
-        pylab.imshow(edges)
-        pylab.show()
+        #res1 = cv2.GaussianBlur(self.image, (7,7), 0)
+        #res2 = cv2.GaussianBlur(self.image, (3,3), 0)
+        #edges = self.image - res2
+        #pylab.imshow(edges)
+        #pylab.show()
         #pylab.imshow(res2)
         #pylab.show()
 
