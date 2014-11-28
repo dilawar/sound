@@ -38,5 +38,5 @@ logger.addHandler(ch)
 
 # @brief Configuration read from the file
 config = None
-
 sampling_freq = None
+
