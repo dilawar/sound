@@ -30,6 +30,7 @@ class Note:
         self.points = []
 
     def createHull(self):
+        return
         try:
             self.hull = scipy.spatial.ConvexHull(self.points)
         except:

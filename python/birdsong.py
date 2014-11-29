@@ -58,13 +58,18 @@ class BirdSong():
         self.imageH.write_png(self.filename)
         pylab.close()
         self.getNotes()
-        self.plotNotes("notes.png", createTimeStampDir = True)
+        #self.plotNotes("notes.png", createTimeStampDir = True)
+        self.plotNotes(filename = None, createTimeStampDir = True)
 
     def getNotes(self, **kwargs):
         g.logger.info("Read image in GRAYSCALE mode to detect edges")
         self.image = cv2.imread(self.filename, 0)
         minPixelVal = int(g.config.get('note', 'maxval_startpixel'))
-        self.croppedImage = algorithms.autoCrop(self.image, minPixelVal)
+        if int(g.config.get('global', 'autocrop')) != 0:
+            threshold = int(g.config.get('global', 'threshold'))
+            self.croppedImage = algorithms.autoCrop(self.image, threshold)
+        else:
+            self.croppedImage = self.image
         img = np.copy(self.croppedImage)
         self.notes = algorithms.notes(img)
 
