@@ -68,6 +68,17 @@ class BirdSong():
         img = np.copy(self.croppedImage)
         self.notes = algorithms.notes(img)
 
+    def createDataDirs(self, createTimeStampDir = True):
+        basedir = '_output'
+        if not os.path.isdir(basedir):
+            os.makedirs(basedir)
+        if createTimeStampDir:
+            dirpath = os.path.join(basedir, stamp)
+            if not os.path.isdir(dirpath): os.makedirs(dirpath)
+            else:
+                dirpath = '_output'
+        return dirpath
+
     def plotNotes(self, filename = None, createTimeStampDir = True):
         # Plot the notes.
         fig = pylab.figure()
@@ -84,8 +95,7 @@ class BirdSong():
         if not filename:
             pylab.show()
         else:
-            if createTimeStampDir:
-                os.makedirs(stamp)
-            filename = os.path.join(stamp, filename)
+            dirpath = self.createDataDirs(createTimeStampDir)
+            filename = os.path.join(dirpath, filename)
             g.logger.info("Saving notes and image to %s" % filename)
             pylab.savefig(filename)
