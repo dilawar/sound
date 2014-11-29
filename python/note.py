@@ -23,27 +23,42 @@ class Note:
     def __init__(self, x, y):
         self.origin = (x, y)
         self.energy = 0.0
-        self.area = 0.0
         self.width = 0.0
-        self.hight = 0.0
+        self.height = 0.0
         self.hull = None
         self.points = []
-
-    def createHull(self):
-        return
-        try:
-            self.hull = scipy.spatial.ConvexHull(self.points)
-        except:
-            print("Failed to create hull")
-            print("Points: {}".format(self.points))
-            raise Exception("failed to create hull")
+        self.xpoints = []
+        self.ypoints = []
+#
+#    def createHull(self):
+#        return
+#        try:
+#            self.hull = scipy.spatial.ConvexHull(self.points)
+#        except:
+#            print("Failed to create hull")
+#            print("Points: {}".format(self.points))
+#            raise Exception("failed to create hull")
+#
+    def computeAll(self, image):
+        self.width = self.xpoints.max() - self.xpoints.min()
+        self.height = self.ypoints.max() - self.ypoints.min()
+        for p in self.points:
+            self.energy += image[p[0], p[1]] 
 
     def __repr__(self):
-        msg = "Start: {}, hull {}".format(
+        msg = "Start: {}, energy {}, width {}, height {}".format(
                 self.origin
-                , self.hull
+                , self.energy
+                , self.width
+                , self.height
                 )
         return msg
+
+    def addPoint(self, point):
+        x, y = point
+        self.xpoints.append(x)
+        self.ypoints.append(y)
+        self.points.append(point)
 
 ##
 # @brief Plot the note. We need to change the index of points before using

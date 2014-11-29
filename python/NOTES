@@ -6,3 +6,8 @@ idea.
 
 Now the algorithm is following. Pick a pixel which is guaranteed to be on the
 note and use "slither" algorithm.
+
+Sat 29 Nov 2014 09:52:33 PM IST
+
+Working. Can get notes. Need to check for harmonics now. If note does not have a
+harmonic, reject it else accept it.

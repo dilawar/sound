@@ -45,6 +45,15 @@ def autoCrop(image, threshold, **kwargs):
             pass
     return np.array(newImage)
     
+##
+# @brief Searches for a pixel which could be a candidate for searching a notes
+# in given image.
+#
+# @param image
+# @param pixelVal
+# @param kwargs
+#
+# @return 
 def searchForPixels(image, pixelVal, **kwargs):
     """Search for all pixels of a given value in image """
     pixels = []
@@ -104,20 +113,18 @@ def slither(startx, starty, startValue, image, threshold):
         image[x, y] = 255
         # Make sure we never go beyound the row - 1 and column - 1 index.
         if x + 1 < image.shape[0] and y + 1 < image.shape[1]:
-            n.points.append([x,y])
+            n.addPoint([x,y])
             for a in [x-1, x, x+1]:
                 for b in [y-1, y, y+1]:
                     if (image[a, b] - startValue) < threshold:
                         points.append([a, b])
                         image[a, b] = 255
-                        n.points.append([a, b])
+                        n.addPoint([a, b])
     if len(n.points) < minPixelsInNote:
         g.logger.debug("Not enough points in this note. Rejecting %s " % n)
         return None
     else:
         g.logger.debug("A note with %s points found" % len(n.points))
-        g.logger.info("Creating convex hull of this note")
-        n.createHull()
         return n
 
 ##
