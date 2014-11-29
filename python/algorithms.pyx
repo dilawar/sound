@@ -55,7 +55,7 @@ cpdef autoCrop(image, threshold):
 # @param kwargs
 #
 # @return 
-def searchForPixels(image, pixelVal, **kwargs):
+def searchForPixels(image, pixelVal):
     """Search for all pixels of a given value in image """
     pixels = []
     for i, row in enumerate(image):
@@ -106,8 +106,6 @@ def findNotes(image, threshold = None, **kwargs):
 cpdef slither(startx, starty, startValue, image, threshold):
     assert(startValue == image.min()), "Min in image can't be smaller than startValue"
     cdef int minPixelsInNote = int(g.config.get('note', 'min_pixels'))
-    cdef int x, y
-    cdef a, b
     n = note.Note(startx, starty)
     points = []
     points.append([startx, starty])

@@ -29,16 +29,7 @@ class Note:
         self.points = []
         self.xpoints = []
         self.ypoints = []
-#
-#    def createHull(self):
-#        return
-#        try:
-#            self.hull = scipy.spatial.ConvexHull(self.points)
-#        except:
-#            print("Failed to create hull")
-#            print("Points: {}".format(self.points))
-#            raise Exception("failed to create hull")
-#
+
     def computeAll(self, image):
         self.width = self.xpoints.max() - self.xpoints.min()
         self.height = self.ypoints.max() - self.ypoints.min()
@@ -72,3 +63,5 @@ class Note:
         points = [[p[1], p[0]] for p in self.points]
         points = np.asarray(points)
         cv2.fillConvexPoly(img, points, 1)
+
+
