@@ -2,7 +2,7 @@
 
     Process the data in birdsong.
 
-Last modified: Fri Nov 28, 2014  12:10AM
+Last modified: Sat Nov 29, 2014  06:34PM
 
 """
     
@@ -24,6 +24,12 @@ import numpy as np
 import pylab
 import algorithms
 
+import time 
+import datetime
+import os
+st = time.time()
+stamp = datetime.datetime.fromtimestamp(st).strftime('%Y-%m-%d-%H%M')
+
 class BirdSong():
 
     def __init__(self, data):
@@ -31,6 +37,8 @@ class BirdSong():
         self.imageMat = None
         self.frequencies = None
         self.image = None
+        self.croppedImage = None
+        self.notesImage = None
         self.imageH = None
         self.filename = "spectogram.png"
         self.notes = []
@@ -50,31 +58,34 @@ class BirdSong():
         self.imageH.write_png(self.filename)
         pylab.close()
         self.getNotes()
+        self.plotNotes("notes.png", createTimeStampDir = True)
 
     def getNotes(self, **kwargs):
         g.logger.info("Read image in GRAYSCALE mode to detect edges")
         self.image = cv2.imread(self.filename, 0)
-        croppedImage = algorithms.autoCrop(self.image, 120)
-        image = np.copy(croppedImage)
-        self.notes = algorithms.notes(croppedImage)
+        minPixelVal = int(g.config.get('note', 'maxval_startpixel'))
+        self.croppedImage = algorithms.autoCrop(self.image, minPixelVal)
+        img = np.copy(self.croppedImage)
+        self.notes = algorithms.notes(img)
+
+    def plotNotes(self, filename = None, createTimeStampDir = True):
         # Plot the notes.
         fig = pylab.figure()
         ax1 = fig.add_subplot(211)
         ax2 = fig.add_subplot(212)
-        noteImage = np.empty(shape=image.shape, dtype=np.int8)
-        noteImage.fill(255)
+        self.notesImage = np.empty(shape=self.croppedImage.shape, dtype=np.int8)
+        titleText = [ "{}:{}".format(va[0], va[1]) for va in (g.config.items('note'))]
+        ax1.set_title(" ".join(titleText))
+        self.notesImage.fill(255)
         for note in self.notes:
-            note.plot(noteImage)
-        ax2.imshow(image)
-        ax1.imshow(noteImage, cmap=pylab.gray())
-        pylab.show()
-        
-        # Changes the data-type to opencv format.
-        #res1 = cv2.GaussianBlur(self.image, (7,7), 0)
-        #res2 = cv2.GaussianBlur(self.image, (3,3), 0)
-        #edges = self.image - res2
-        #pylab.imshow(edges)
-        #pylab.show()
-        #pylab.imshow(res2)
-        #pylab.show()
-
+            note.plot(self.notesImage)
+        ax2.imshow(self.croppedImage)
+        ax1.imshow(self.notesImage, cmap=pylab.gray())
+        if not filename:
+            pylab.show()
+        else:
+            if createTimeStampDir:
+                os.makedirs(stamp)
+            filename = os.path.join(stamp, filename)
+            g.logger.info("Saving notes and image to %s" % filename)
+            pylab.savefig(filename)
