@@ -1,4 +1,4 @@
-"""main.py: Starting point of the program.
+""" Starting point of the program.
 
 Last modified: Thu Nov 27, 2014  10:37PM
 
@@ -13,18 +13,13 @@ __maintainer__       = "Dilawar Singh"
 __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
-import aifc 
-import sys
-import numpy as np
-import pylab
 import birdsong
-import globals
-import logging
-import reader
-
+import globals as g
+import reader 
+import birdsong
 
 def main(config):
-    globals.config = config
+    g.config = config
     af = reader.AudioFile(config.get('audio', 'filepath'))
     af.readData()
     bs = birdsong.BirdSong(af.data)

@@ -41,7 +41,7 @@ class BirdSong():
 
     def processData(self, **kwargs):
         g.logger.info("STEP: Processing the speech data")
-        length = kwargs.get("sample_size", len(self.data) - 1 )
+        length = int(kwargs.get("sample_size", len(self.data) - 1 ))
         g.logger.info("Processing %s samples" % length)
         data = self.data[:length]
         #data = dsp.filterData(data, g.sampling_freq)
