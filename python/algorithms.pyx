@@ -30,8 +30,9 @@ import note
 # @param kwargs
 #
 # @return  Image with deleted rows.
-def autoCrop(image, threshold, **kwargs):
+cpdef autoCrop(image, threshold):
     """Delete rows which do not have any pixel less than the given value"""
+    cdef int i
     rowsToDelete = []
     newImage = []
     for i, row in enumerate(image):
@@ -102,9 +103,11 @@ def findNotes(image, threshold = None, **kwargs):
 # @param image
 #
 # @return 
-def slither(startx, starty, startValue, image, threshold):
+cpdef slither(startx, starty, startValue, image, threshold):
     assert(startValue == image.min()), "Min in image can't be smaller than startValue"
-    minPixelsInNote = int(g.config.get('note', 'min_pixels'))
+    cdef int minPixelsInNote = int(g.config.get('note', 'min_pixels'))
+    cdef int x, y
+    cdef a, b
     n = note.Note(startx, starty)
     points = []
     points.append([startx, starty])
