@@ -19,6 +19,7 @@ import globals as g
 import logging
 import dsp 
 import cv2
+import scipy
 import numpy as np
 import pylab
 import algorithms
@@ -32,6 +33,7 @@ class BirdSong():
         self.image = None
         self.imageH = None
         self.filename = "spectogram.png"
+        self.notes = []
 
     def processData(self, **kwargs):
         g.logger.info("STEP: Processing the speech data")
@@ -46,12 +48,26 @@ class BirdSong():
                 )
         self.imageMat = self.imageH.get_array()
         self.imageH.write_png(self.filename)
+        pylab.close()
         self.getNotes()
 
     def getNotes(self, **kwargs):
         g.logger.info("Read image in GRAYSCALE mode to detect edges")
         self.image = cv2.imread(self.filename, 0)
-        algorithms.findPointsOnTheEdges(self.image)
+        croppedImage = algorithms.autoCrop(self.image, 120)
+        image = np.copy(croppedImage)
+        self.notes = algorithms.notes(croppedImage)
+        # Plot the notes.
+        fig = pylab.figure()
+        ax1 = fig.add_subplot(211)
+        ax2 = fig.add_subplot(212)
+        noteImage = np.empty(shape=image.shape, dtype=np.int8)
+        noteImage.fill(255)
+        for note in self.notes:
+            note.plot(noteImage)
+        ax2.imshow(image)
+        ax1.imshow(noteImage, cmap=pylab.gray())
+        pylab.show()
         
         # Changes the data-type to opencv format.
         #res1 = cv2.GaussianBlur(self.image, (7,7), 0)

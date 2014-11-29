@@ -15,6 +15,8 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import scipy
+import numpy as np
+import cv2
 
 class Note:
 
@@ -27,10 +29,30 @@ class Note:
         self.hull = None
         self.points = []
 
+    def createHull(self):
+        try:
+            self.hull = scipy.spatial.ConvexHull(self.points)
+        except:
+            print("Failed to create hull")
+            print("Points: {}".format(self.points))
+            raise Exception("failed to create hull")
+
     def __repr__(self):
-        self.hull = scipy.spatial.ConvexHull(self.points)
         msg = "Start: {}, hull {}".format(
                 self.origin
                 , self.hull
                 )
         return msg
+
+##
+# @brief Plot the note. We need to change the index of points before using
+# fillConvexPoly function.
+#
+# @param img Image onto which points needs to be plotted.
+# @param kwargs
+#
+# @return None.
+    def plot(self, img, **kwargs):
+        points = [[p[1], p[0]] for p in self.points]
+        points = np.asarray(points)
+        cv2.fillConvexPoly(img, points, 1)
