@@ -95,6 +95,7 @@ def findNotes(image, threshold = None, **kwargs):
 # @return 
 def slither(startx, starty, startValue, image, threshold):
     assert(startValue == image.min()), "Min in image can't be smaller than startValue"
+    minPixelsInNote = int(g.config.get('note', 'min_pixels'))
     n = note.Note(startx, starty)
     points = []
     points.append([startx, starty])
@@ -110,7 +111,7 @@ def slither(startx, starty, startValue, image, threshold):
                         points.append([a, b])
                         image[a, b] = 255
                         n.points.append([a, b])
-    if len(n.points) < 50:
+    if len(n.points) < minPixelsInNote:
         g.logger.debug("Not enough points in this note. Rejecting %s " % n)
         return None
     else:
