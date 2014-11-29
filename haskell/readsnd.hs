@@ -1,11 +1,12 @@
 import qualified Sound.File.Sndfile as Snd
 import qualified Sound.File.Sndfile.Buffer.StorableVector as BV
 import qualified Data.StorableVector as V
-import Array as A
-import Complex
+import Data.Array as A
+import Data.Complex
 import DSP.Basic
 import Numeric.Transform.Fourier.FFT
 import DrawSpec
+import System.Environment (getArgs)
 
 sndFileName = "../testSamples/5650__pushtobreak__valihaloop5-5.aif"
 
@@ -46,5 +47,6 @@ getFrameMagnitude frame = A.array (0,(l-1)`div`2) [(i,log (magnitude (frame!(i+(
 
 main :: IO ()
 main = do
-   audioVect <- readWavFile sndFileName
+   filename <- getArgs
+   audioVect <- readWavFile $ head filename
    drawSpec (map (getFrameMagnitude . rfft) (getFrames (arrayFromVector audioVect) 1024 512)) "spec.png"

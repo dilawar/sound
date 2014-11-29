@@ -1,7 +1,7 @@
 module DrawSpec(drawSpec) where
 import Graphics.Rendering.Cairo
 import Data.Array.MArray
-import Array
+import Data.Array
 import Data.Word
 import Data.Bits
 
