@@ -24,11 +24,7 @@ import numpy as np
 import pylab
 import algorithms
 
-import time 
-import datetime
 import os
-st = time.time()
-stamp = datetime.datetime.fromtimestamp(st).strftime('%Y-%m-%d-%H%M')
 
 class BirdSong():
 
@@ -78,7 +74,7 @@ class BirdSong():
         if not os.path.isdir(basedir):
             os.makedirs(basedir)
         if createTimeStampDir:
-            dirpath = os.path.join(basedir, stamp)
+            dirpath = os.path.join(basedir, g.stamp)
             if not os.path.isdir(dirpath): os.makedirs(dirpath)
             else:
                 dirpath = '_output'

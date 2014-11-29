@@ -20,24 +20,14 @@ import pylab
 import birdsong
 import globals
 import logging
+import reader
 
-def readAifData(file):
-    global samplingFreq
-    globals.logger.info("Reading %s " % file)
-    f = aifc.open(file, "r") 
-    samplingFreq = f.getframerate()
-    globals.sampling_freq = samplingFreq
-    nframes = f.getnframes()
-    strData = f.readframes(nframes)
-    data = np.fromstring(strData, np.short).byteswap()
-    data = data[~np.isnan(data)]
-    globals.logger.debug("Reading audio file is over. Got %s samples" % len(data))
-    return data
 
 def main(config):
     globals.config = config
-    data = readAifData(config.get("audio", "filepath"))
-    bs = birdsong.BirdSong(data)
+    af = reader.AudioFile(config.get('audio', 'filepath'))
+    af.readData()
+    bs = birdsong.BirdSong(af.data)
     bs.processData(sample_size = 2*1e5)
 
 def configParser(file):

@@ -15,6 +15,8 @@ __email__            = "dilawars@ncbs.res.in"
 __status__           = "Development"
 
 import logging
+import time 
+import datetime
 
 # create logger with 'spam_application'
 logger = logging.getLogger('birdsong')
@@ -39,4 +41,8 @@ logger.addHandler(ch)
 # @brief Configuration read from the file
 config = None
 sampling_freq = None
+
+# Timestamping
+st = time.time()
+stamp = datetime.datetime.fromtimestamp(st).strftime('%Y-%m-%d-%H%M')
 
