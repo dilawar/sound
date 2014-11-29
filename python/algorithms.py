@@ -64,6 +64,20 @@ def searchForPixels(image, pixelVal, **kwargs):
     assert len(pixels) > 0, "There must be at least one pixel of value %s" % pixelVal
     return pixels
 
+##
+# @brief Check if harmonics exits for this note.
+#
+# @param image
+# @param note
+#
+# @return 
+def harmonics(image, note):
+    if not note:
+        return
+    note.computeAll()
+    print note
+
+
 def findNotes(image, threshold = None, **kwargs):
     """Find notes in the given image """
     notes = []
@@ -85,6 +99,7 @@ def findNotes(image, threshold = None, **kwargs):
             x, y = startPixels.pop()
             if image[x, y] == minPixel:
                 note = slither(x, y, minPixel, image, threshold)
+                harmonics(image, note)
                 if note is not None:
                     g.logger.info("Found a note: starting point {} size {}".format(
                         (x, y), len(note.points))
@@ -139,6 +154,7 @@ def notes(image):
     # pixels. This has reduced our search size. Now in this matrix, we need to
     # locate islands which belongs to notes. The islands must be separated by
     # some no which we do not know.
+    g.image = np.copy(image)
     notes = findNotes(image)
     return notes
 

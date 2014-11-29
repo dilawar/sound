@@ -17,6 +17,8 @@ __status__           = "Development"
 import scipy
 import numpy as np
 import cv2
+import globals as g
+
 
 class Note:
 
@@ -29,7 +31,8 @@ class Note:
         self.points = []
         self.xpoints = []
         self.ypoints = []
-#
+        self.computed = False
+
 #    def createHull(self):
 #        return
 #        try:
@@ -39,11 +42,14 @@ class Note:
 #            print("Points: {}".format(self.points))
 #            raise Exception("failed to create hull")
 #
-    def computeAll(self, image):
-        self.width = self.xpoints.max() - self.xpoints.min()
-        self.height = self.ypoints.max() - self.ypoints.min()
+    def computeAll(self):
+        if self.computed:
+            return
+        self.width = max(self.xpoints) - min(self.xpoints)
+        self.height = max(self.ypoints) - min(self.ypoints)
         for p in self.points:
-            self.energy += image[p[0], p[1]] 
+            self.energy += g.image[p[0], p[1]] 
+        self.computed = True
 
     def __repr__(self):
         msg = "Start: {}, energy {}, width {}, height {}".format(

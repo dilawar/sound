@@ -46,3 +46,6 @@ sampling_freq = None
 st = time.time()
 stamp = datetime.datetime.fromtimestamp(st).strftime('%Y-%m-%d-%H%M')
 
+
+# This is the original image 
+image = None
