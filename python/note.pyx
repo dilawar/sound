@@ -18,9 +18,12 @@ import scipy
 import numpy as np
 import cv2
 
-class Note:
+cdef class Note:
 
-    def __init__(self, x, y):
+    cdef object origin, points, xpoints, ypoints, hull
+    cdef double energy, width, height
+
+    def __cinit__(self, x, y):
         self.origin = (x, y)
         self.energy = 0.0
         self.width = 0.0
