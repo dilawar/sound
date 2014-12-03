@@ -1,2 +1,2 @@
 #!/bin/bash
-python ./main.py -f ~/Public/DATA/BirdSongsRecordings/mr1.220405.aif -c songbird.conf
+python ./main.py -f ~/Public/DATA/BirdSongsRecordings/more_than_one_birds_singing_simul.aif -c songbird.conf
