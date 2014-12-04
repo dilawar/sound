@@ -26,12 +26,12 @@ import algorithms
 
 import os
 
-cdef class BirdSong:
+class BirdSong:
 
-    cdef object data, imageMat,  image, croppedImage, notesImage
-    cdef object Pxx, frequencies, bins
-    cdef object imageH, notes
-    cdef char* filename
+    #cdef object data, imageMat,  image, croppedImage, notesImage
+    #cdef object Pxx, frequencies, bins
+    #cdef object imageH, notes
+    #cdef char* filename
 
     def __init__(self, data):
         self.data = data
@@ -46,14 +46,14 @@ cdef class BirdSong:
 
     def processData(self, **kwargs):
         g.logger.info("STEP: Processing the speech data")
-        length = int(kwargs.get("sample_size", len(self.data) - 1 ))
+        length = int(g.config.get('global', 'samples'))
         g.logger.info("Processing %s samples" % length)
         data = self.data[:length]
         #data = dsp.filterData(data, g.sampling_freq)
         self.Pxx, self.frequencies, self.bins, self.imageH = dsp.spectogram(
                 data
                 , g.sampling_freq
-                , output = None #"spectogram.png"
+                , output = None
                 )
         self.imageMat = self.imageH.get_array()
         self.imageH.write_png(self.filename)

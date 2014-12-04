@@ -18,13 +18,12 @@ from scipy import signal
 import pylab
 import globals as g
 
-def filterData(data, samplingFreq, **kwargs):
-    windowSize = kwargs.get("window_size", 4300)
+cpdef filterData(data, samplingFreq, windowSize = 4300):
     b, a = signal.butter(6, [2000/samplingFreq, 15000/samplingFreq], 'bandpass')
     ft = signal.lfilter(b, a, data)
     return ft
 
-def spectogram(data, samplingFreq,  **kwargs):
+cpdef spectogram(data, samplingFreq, output=None):
     g.logger.info("Computing spectogram: samplingFreq %s " % samplingFreq)
     nfft = 256
     Pxx, freqs, bins, im = pylab.specgram(
@@ -33,7 +32,7 @@ def spectogram(data, samplingFreq,  **kwargs):
             , NFFT = nfft
             , window = pylab.window_hanning
             )
-    filename = kwargs.get("output", None)
+    filename = output
     if filename:
         g.logger.info("Saving spectogram to %s" % filename)
         pylab.savefig(filename)
