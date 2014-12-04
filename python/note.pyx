@@ -1,4 +1,3 @@
-
 """note.py: Class representing a note.
 
 Last modified: Sat Jan 18, 2014  05:01PM
@@ -22,6 +21,14 @@ cdef class Note:
 
     cdef object origin, points, xpoints, ypoints, hull
     cdef double energy, width, height
+
+    property points:
+        
+        def __get__(self):
+            return self.points
+
+        def __set__(self, points):
+            self.points = points
 
     def __cinit__(self, x, y):
         self.origin = (x, y)
