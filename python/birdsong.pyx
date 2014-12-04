@@ -26,7 +26,12 @@ import algorithms
 
 import os
 
-class BirdSong():
+cdef class BirdSong:
+
+    cdef object data, imageMat,  image, croppedImage, notesImage
+    cdef object Pxx, frequencies, bins
+    cdef object imageH, notes
+    cdef char* filename
 
     def __init__(self, data):
         self.data = data
