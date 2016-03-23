@@ -9,9 +9,9 @@ INCLUDE_DIRECTORIES(${GSL_INCLUDE_DIR})
 ADD_DEFINITIONS(-DENABLE_UNIT_TESTS)
 
 SET(Boost_USE_STATIC_LIBS ON)
-FIND_PACKAGE(Boost REQUIRED COMPONENTS  
+FIND_PACKAGE(Boost COMPONENTS  
     iostreams  
-    system unit_test_framework
+    system 
     filesystem
     program_options
     )
