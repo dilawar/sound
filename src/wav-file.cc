@@ -2,27 +2,27 @@
 /*
  * project_hindi
  * Copyright (C) Dilawar Singh 2010 <dilawar@ee.iitb.ac.in>
- * 
+ *
  * project_hindi is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
  * Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * project_hindi is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "./../include/wav-file.h"
-#include	"./../include/wav-def.h"
-#include  <string.h>
-#include	<stdio.h>
-#include	<stdlib.h>
-#include	<math.h>
+#include "./../include/wav-def.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
@@ -51,7 +51,7 @@ WavFile::~WavFile()
  *--------------------------------------------------------------------------------------
  *       Class:  WavFile
  *      Method:  getNumSamples
- * Description:  returns num of sample in file.  
+ * Description:  returns num of sample in file.
  *--------------------------------------------------------------------------------------
  */
 long int WavFile::getNumSamples()
@@ -127,7 +127,7 @@ int WavFile::ifMoreDataAvailable()
  */
 double WavFile::readCurrentInput()
 {
-    if( (gWavDataIn == NULL) || (maxInSamples <=0) || (numInSamples < 0) ) 
+    if( (gWavDataIn == NULL) || (maxInSamples <=0) || (numInSamples < 0) )
     {
         printf("\nInput file not ready (or not loaded) !!!\n");
         exit(1);
@@ -179,7 +179,7 @@ int WavFile::openWavFile(char* fileName)
     /* allocate wav header */
     pWavHeader = new WAV_HDR;
     pChunkHeader = new CHUNK_HDR;
-    
+
     if( NULL == pWavHeader )
     {
         printf("can't new headers\n");
@@ -192,8 +192,8 @@ int WavFile::openWavFile(char* fileName)
         exit(-1);
     }
 
-    /* 
-     * open the wav file 
+    /*
+     * open the wav file
      */
     pFile = fopen( fileName, "rb");
     if(pFile == NULL)
@@ -207,7 +207,7 @@ int WavFile::openWavFile(char* fileName)
      *  Now, we have load the file. Start reading data.
      *-----------------------------------------------------------------------------*/
 
-    /* read riff/wav header */ 
+    /* read riff/wav header */
     stat = fread((void*) pWavHeader, sizeof(WAV_HDR), (size_t)1, pFile);
     if(stat != 1)
     {
@@ -274,7 +274,7 @@ int WavFile::openWavFile(char* fileName)
         exit(-1);
     }
 
-    /* 
+    /*
      * Skip over any remaining portion of wav header.
      */
     rMore = pWavHeader->pcmHeaderLength - (sizeof(WAV_HDR) - 20);
@@ -284,14 +284,18 @@ int WavFile::openWavFile(char* fileName)
         exit(-1);
     }
 
-    /* 
+    /*
      * read chunk untill a data chunk is found.
      */
     sFlag = 1;
     while(sFlag != 0)
     {
         // check attempts.
-        if(sFlag > 10) { printf("\nToo many chunks"); exit(-1);}
+        if(sFlag > 10)
+        {
+            printf("\nToo many chunks");
+            exit(-1);
+        }
 
         // read chunk header
         cerr << "Size of chunk" << sizeof( CHUNK_HDR) << endl;
@@ -308,7 +312,10 @@ int WavFile::openWavFile(char* fileName)
             outBuffer[i] = pChunkHeader->dId[i];
         }
         outBuffer[4] = 0;
-        if(strcmp(outBuffer, "data") == 0) { break;}
+        if(strcmp(outBuffer, "data") == 0)
+        {
+            break;
+        }
 
         // skip over chunk.
         sFlag++;
@@ -338,14 +345,15 @@ int WavFile::openWavFile(char* fileName)
     wBuffer = new char[wBufferLength];
     if( wBuffer == NULL)
     {
-        printf("\nCan't allocate."); 
+        printf("\nCan't allocate.");
         exit(-1);
     }
 
     gWavDataIn = new double[maxInSamples];
     if(gWavDataIn == NULL)
     {
-        printf("Can't allocate\n"); exit(-1);
+        printf("Can't allocate\n");
+        exit(-1);
     }
 
     /* read signal data */
@@ -381,41 +389,39 @@ int WavFile::openWavFile(char* fileName)
     }
 #endif     /* -----  not DEBUG  ----- */
 
-    /* 
+    /*
      * save all this.
      */
-   fs_hz = (double) (pWavHeader->nSamplesPerSec);
-   bitsPerSample = pWavHeader->numBitsPerSample;
-   nChannel = pWavHeader->numChannels;
+    fs_hz = (double) (pWavHeader->nSamplesPerSec);
+    bitsPerSample = pWavHeader->numBitsPerSample;
+    nChannel = pWavHeader->numChannels;
 
-  /* reset and delete */
-   numInSamples = 0;
+    /* reset and delete */
+    numInSamples = 0;
 
-   if(wBuffer != NULL) delete wBuffer;
-   if(pWavHeader != NULL) delete pWavHeader;
-   if(pChunkHeader != NULL) delete pChunkHeader;
-   fclose(pFile);
-    
-   return EXIT_SUCCESS;
+    if(wBuffer != NULL) delete wBuffer;
+    if(pWavHeader != NULL) delete pWavHeader;
+    if(pChunkHeader != NULL) delete pChunkHeader;
+    fclose(pFile);
+
+    return EXIT_SUCCESS;
 }
 
 int WavFile::displayInformation(char* fName)
 {
-#if 1
-   /*
-    * print the data.
-    */
-   printf("\n-----------------------------------------------------");
-   printf("\nLoaded wav file : %s", fName);
-   printf("\nSample rate: %1.01f (Hz)", fs_hz);
-   printf("\nNumber of samples = %ld", maxInSamples);
-   printf("\nBits per sample = %d", bitsPerSample);
-   printf("\nNumber of channels = %d", nChannel);
-   printf("\n----------------------------------------------------\n");
-#endif
- 
-  return EXIT_SUCCESS;
-} 
+    /*
+     * print the data.
+     */
+    printf("\n-----------------------------------------------------");
+    printf("\nLoaded wav file : %s", fName);
+    printf("\nSample rate: %1.01f (Hz)", fs_hz);
+    printf("\nNumber of samples = %ld", maxInSamples);
+    printf("\nBits per sample = %d", bitsPerSample);
+    printf("\nNumber of channels = %d", nChannel);
+    printf("\n----------------------------------------------------\n");
+
+    return EXIT_SUCCESS;
+}
 
 int WavFile::writeDataToFile( char* outfile )
 {
@@ -428,12 +434,11 @@ int WavFile::writeDataToFile( char* outfile )
     fprintf(pFile, header);
     for( int i = 0; i < maxInSamples; i++)
     {
-       char data[30];
-       sprintf(data,"%1.9f,%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it. 
-       fprintf(pFile, data);
+        char data[30];
+        sprintf(data,"%1.9f,%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it.
+        fprintf(pFile, data);
     }
     fclose(pFile);
     return EXIT_SUCCESS;
-
 }
 

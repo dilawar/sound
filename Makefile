@@ -7,13 +7,11 @@
 # Modification logs : 
 CC = g++
 CFLAGS = -c -O3 -Wall -Werror   -I /usr/local/include 
-CFLAGS += $(shell pkg-config --cflags alsa)
 MACRO =  -D DEBUG #-D SCILAB1 -D SOX
 VPATH = src:../include
-OBJECTS = main.o wav-file.o alsa.o gtk_proj.o
+OBJECTS = main.o wav-file.o 
 INCFLAGS = -I include 
 LDFLAGS = -Wl,-rpath-link,/usr/local/lib  #-L/usr/lib/scilab
-LIBS = $(shell pkg-config --libs alsa)
 
 all: parseSpeech include/wav-def.h
 
@@ -26,11 +24,6 @@ main.o : main.cc
 wav-file.o : wav-file.cc
 		$(CC) $(CFLAGS) $(MACRO) $(INCFLAGS) $< -o $@
 
-alsa.o : alsa.cc
-		$(CC) $(CFLAGS) $(MACRO) $(INCFLAGS) $< -o $@
-
-gtk_proj.o : gtk_proj.cc
-		$(CC) $(CFLAGS) $(MACRO) $(INCFLAGS) $< -o $@
 		
 #.SUFFIXES:	.c .cc .C .cpp .o
 #.c.o :
