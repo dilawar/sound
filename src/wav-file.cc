@@ -24,6 +24,8 @@
 #include	<stdlib.h>
 #include	<math.h>
 
+using namespace std;
+
 /* constructor */
 WavFile::WavFile()
 {
@@ -222,25 +224,24 @@ int WavFile::openWavFile(char* fileName)
     if(strcmp(outBuffer, "RIFF") != 0) // tested.
     {
         printf("\nBad RIFF format. I am not cool enough to support everything");
-        printf("\nyou provide us with! Give me a good file.");
         exit(-1);
     }
 
     for(i = 0; i < 4; i++)
-    {
         outBuffer[i] = pWavHeader->wID[i];
-    }
     outBuffer[4] = 0;
 
-#ifdef DEBUG1
+#ifdef DEBUG
     std::cout<<"\noutBuffer: "<<outBuffer<<"and fID:"<<pWavHeader->fId;
+    print_hdr( pWavHeader );
 #else      /* -----  not >DEBUG  ----- */
 
 #endif     /* -----  not >DEBUG  ----- */
 
     if(strcmp(outBuffer, "WAVE") != 0) // tested.
     {
-        printf("\nBad WAVE format");
+        printf( "\n%s" , outBuffer );
+        printf("\nBad WAVE format \n");
         exit(-1);
     }
 
@@ -248,9 +249,9 @@ int WavFile::openWavFile(char* fileName)
     {
         outBuffer[i] = pWavHeader->fId[i];
     }
-    outBuffer[4] = 0;
+    outBuffer[4] = '\0';
 
-#ifdef DEBUG1
+#ifdef DEBUG
     std::cout<<"outBuffer:"<<outBuffer;
     std::cout<<"compare:"<<strcmp(outBuffer, "fmt ");
 #endif     /* -----  not >DEBUG  ----- */
@@ -270,6 +271,7 @@ int WavFile::openWavFile(char* fileName)
     if( (pWavHeader->numBitsPerSample != 16) && (pWavHeader->numBitsPerSample != 8))
     {
         printf("\nBad wav bits per sample");
+        exit(-1);
     }
 
     /* 
@@ -279,6 +281,7 @@ int WavFile::openWavFile(char* fileName)
     if( 0 != fseek(pFile, rMore, SEEK_CUR))
     {
         printf("Can't seek.");
+        exit(-1);
     }
 
     /* 
@@ -288,9 +291,10 @@ int WavFile::openWavFile(char* fileName)
     while(sFlag != 0)
     {
         // check attempts.
-        if(sFlag > 10) { printf("\nToo manu chunks"); exit(-1);}
+        if(sFlag > 10) { printf("\nToo many chunks"); exit(-1);}
 
         // read chunk header
+        cerr << "Size of chunk" << sizeof( CHUNK_HDR) << endl;
         stat = fread((void*)pChunkHeader, sizeof(CHUNK_HDR), (size_t)1, pFile);
         if( 1 != stat)
         {
@@ -319,6 +323,7 @@ int WavFile::openWavFile(char* fileName)
 
     /* find length of remaining data. */
     wBufferLength = pChunkHeader->dLen;
+    cerr << "wBufferLength : " << pChunkHeader->dLen;
 
 
 #ifdef  DEBUG1
@@ -326,13 +331,15 @@ int WavFile::openWavFile(char* fileName)
 #endif     /* -----  not DEBUG  ----- */
     /* find number of samples. */
     maxInSamples = pChunkHeader->dLen;
+    cerr  << "maxInSamples " << maxInSamples << endl;
     maxInSamples /= pWavHeader->numBitsPerSample/8;
 
     /* allocate new buffers */
     wBuffer = new char[wBufferLength];
     if( wBuffer == NULL)
     {
-        printf("\nCan't allocate."); exit(-1);
+        printf("\nCan't allocate."); 
+        exit(-1);
     }
 
     gWavDataIn = new double[maxInSamples];

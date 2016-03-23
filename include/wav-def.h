@@ -42,18 +42,18 @@
  * This is NOT a copy and paste implementation.
  */
 
+using namespace std;
+
 typedef struct{
     char rID[4];      // 'RIFF'
-    long int rLen;
-
+    unsigned int rLen; // make sure to read only 4 bits
     char wID[4];      // 'WAVE'
-
     char fId[4];      // 'fmt'
-    long int pcmHeaderLength;
+    unsigned int pcmHeaderLength;
     short int wFormatTag;
     short int numChannels;
-    long int nSamplesPerSec;
-    long int nAvgBytesPerSec;
+    unsigned int nSamplesPerSec;
+    unsigned int nAvgBytesPerSec;
     short int numBlockAlingn;
     short int numBitsPerSample;
 } WAV_HDR;
@@ -62,6 +62,23 @@ typedef struct{
 typedef struct
 {
     char dId[4];  // 'data' or 'fact'
-    long int dLen;
+    unsigned int dLen;
 } CHUNK_HDR;
+
+void print_hdr( WAV_HDR* pHDR ) 
+{
+    cerr << endl;
+    cerr << "ChunkID : " << pHDR->rID << endl
+        << "ChunkSize : " << pHDR->rLen << endl
+        << "Format : " << pHDR->wID << endl
+        << "Subchunk1ID : " << pHDR->fId << endl
+        << "Subchunk1Size: " << pHDR->pcmHeaderLength << endl
+        << "AudioFormat: " << pHDR->wFormatTag << endl
+        << "NumChannels: " << pHDR->numChannels << endl
+        << "SampleRate: " << pHDR->nSamplesPerSec << endl
+        << "ByteRate: " << pHDR->nAvgBytesPerSec << endl
+        << "BlockAign: " << pHDR->numBlockAlingn << endl
+        << "BitsPerSample: " << pHDR->numBitsPerSample << endl;
+}
+
 #endif   /* ----- #ifndef wave_def_INC  ----- */

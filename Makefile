@@ -15,7 +15,7 @@ INCFLAGS = -I include
 LDFLAGS = -Wl,-rpath-link,/usr/local/lib  #-L/usr/lib/scilab
 LIBS = $(shell pkg-config --libs alsa)
 
-all: parseSpeech
+all: parseSpeech include/wav-def.h
 
 parseSpeech: $(OBJECTS)
 		$(CC) -o parseSpeech $(OBJECTS) $(LDFLAGS) $(LIBS)
