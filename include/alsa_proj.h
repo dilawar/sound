@@ -33,7 +33,6 @@
 
 #ifndef  ALSA_PROJ_HH
 #define ALSA_PROJ_HH
-#define _GNU_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>

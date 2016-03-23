@@ -417,25 +417,20 @@ int WavFile::displayInformation(char* fName)
   return EXIT_SUCCESS;
 } 
 
-int WavFile::writeDataToFile()
+int WavFile::writeDataToFile( char* outfile )
 {
     FILE* pFile;
-    int n;
-    pFile = fopen("speechData.dat", "w");
+    pFile = fopen( outfile, "w");
     char header[50];
-    n = sprintf(header, "; Sample Rate %1f\n", fs_hz);
+    //sprintf(header, "# Sample Rate %1f\n", fs_hz);
     fprintf(pFile, header);
-    n = sprintf(header, "; Channels %d\n", nChannel);
+    //sprintf(header, "# Channels %d\n", nChannel);
     fprintf(pFile, header);
-
     for( int i = 0; i < maxInSamples; i++)
     {
        char data[30];
-       int n;
-       n = sprintf(data,"\t%1.9f\t%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it. 
-       //pData = gWavDataIn[i];
+       sprintf(data,"%1.9f,%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it. 
        fprintf(pFile, data);
-       //std::cout<<data;
     }
     fclose(pFile);
     return EXIT_SUCCESS;

@@ -6,7 +6,7 @@
 # Created on : July Sep 2, 2010
 # Modification logs : 
 CC = g++
-CFLAGS = -c -g -Wall   -I /usr/local/include 
+CFLAGS = -c -O3 -Wall -Werror   -I /usr/local/include 
 CFLAGS += $(shell pkg-config --cflags alsa)
 MACRO =  -D DEBUG #-D SCILAB1 -D SOX
 VPATH = src:../include

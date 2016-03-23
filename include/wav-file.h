@@ -152,7 +152,7 @@ class WavFile
          *  binary file for further processing.
          * =====================================================================================
          */
-        int writeDataToFile();
+        int writeDataToFile( char* outfile );
 
 
         /*
