@@ -1,7 +1,9 @@
 sound
 =====
 
-This work is derivative of Dr. Taylor’s work http://people.msoe.edu/~taylor/examples/wav.htm . There was a bug in his implementation which is removed from this implementation.  We give here a c++ class to read WAV file and store its content in an array. We also store these values in a csv file which you can plot using application of your choise. We only support non-compressed WAV file. 
+This work is derivative of Dr. Taylor’s work http://people.msoe.edu/~taylor/examples/wav.htm . 
+
+We provide a C++ class to read WAV file. It's content are  stored  in an array which we finally write to a csv file. You can plot this csv file using any application of your choise. We only support non-compressed WAV file. 
 
 On other branches, this project has diverged a lot.
 
