@@ -12,6 +12,7 @@ Usage
 
 Run `make` to build the project. This will create a binary `parseSpeech`.
 
+    cmake .
     make 
     ./parseSpeech -f /path/to/input.wav 
 
