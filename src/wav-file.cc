@@ -427,16 +427,19 @@ int WavFile::writeDataToFile( char* outfile )
 {
     FILE* pFile;
     pFile = fopen( outfile, "w");
+
     char header[50];
+
     //sprintf(header, "# Sample Rate %1f\n", fs_hz);
-    fprintf(pFile, header);
+    fprintf(pFile, "%s", header);
+
     //sprintf(header, "# Channels %d\n", nChannel);
-    fprintf(pFile, header);
+    fprintf(pFile, "%s", header);
     for( int i = 0; i < maxInSamples; i++)
     {
         char data[30];
         sprintf(data,"%1.9f,%1.9f\n", i/fs_hz, gWavDataIn[i]/pow(2,bitsPerSample - 1)); // normalize it.
-        fprintf(pFile, data);
+        fprintf(pFile, "%s", data);
     }
     fclose(pFile);
     return EXIT_SUCCESS;
