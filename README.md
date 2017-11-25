@@ -1,3 +1,5 @@
+_Consider https://github.com/dilawar/wav . It has a header only c++11 implementation._
+
 sound
 =====
 
