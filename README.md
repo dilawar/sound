@@ -1,4 +1,7 @@
-_Consider https://github.com/dilawar/wav . It has a header only c++11 implementation._
+_Consider https://github.com/dilawar/wav . It has a header only c++11 implementation.
+It does not depend on other people code (at all).
+Please attach `wav` file with issue.
+_
 
 sound
 =====
